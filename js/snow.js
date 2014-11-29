@@ -81,28 +81,29 @@ function Snow(scene) {
     self.hideFacesForVert = function(vertIndex) {
         self.hideFace(faceReference[vertIndex]);
         self.hideFace(faceReference[vertIndex]+1);
-
-        // self.hideFace(faceReference[vertIndex]-2);
-
-        // self.hideFace(faceReference[vertIndex]-19);
-        // self.hideFace(faceReference[vertIndex]-18);
-        // self.hideFace(faceReference[vertIndex]-17);
     };
 
     self.update = function(balls) {
         var diff = new THREE.Vector3(0, 0, 0);
-        for(var i in geom.vertices) {
-	    for (var j in balls) {
-                var ball = balls[j];
 
-		diff.copy(geom.vertices[i]);
-		diff.sub(ball.mesh.position);
-		var dist = Math.abs(diff.lengthSq());
-                var ballWidth = getBallWidth(ball);
-		if(dist < ballWidth*ballWidth) {
-		    self.hideFacesForVert(i);
-		}
-	    }
+        for (var ballIndex in balls) {
+            var ball = balls[ballIndex]
+            var ballPosition = ball.mesh.position;
+            var ballWidth = getBallWidth(ball);
+
+            var chunkSpaceX = Math.floor(ballPosition.x)+(xMax/2);
+            var startingVert = Math.max(0, chunkSpaceX%xMax-5);
+
+            for(var currentRow = startingVert; currentRow < geom.vertices.length; currentRow+=xMax) {
+                for(var vertIndex = currentRow; (vertIndex < (currentRow+10) && vertIndex < geom.vertices.length); vertIndex++) {
+    				diff.copy(geom.vertices[vertIndex]);
+    				diff.sub(ballPosition);
+    				var dist = Math.abs(diff.lengthSq());
+    				if(dist < ballWidth*ballWidth) {
+    					self.hideFacesForVert(vertIndex);
+    				}
+    			}
+            }
         }
     }
 
