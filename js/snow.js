@@ -5,8 +5,8 @@ function Snow(scene) {
     var perturb = function(factor) {
         return factor-(Math.random()*(factor*2));
     }
-    var xMax = 20;
-    var zMax = 20;
+    var xMax = 50;
+    var zMax = 50;
 
     var geom = new THREE.Geometry();
     var vertIndex = 0;
@@ -18,11 +18,20 @@ function Snow(scene) {
         var x = -(xMax/2);
         for(var xIndex = 0; xIndex < xMax; xIndex+=1) {
 
-            geom.vertices.push(new THREE.Vector3(x+perturb(0.25), perturb(0.1), z+perturb(0.25)));
+            geom.vertices.push(new THREE.Vector3(x+perturb(0.25), perturb(0.25), z+perturb(0.25)));
+            
+            var texMinX = 0.0;
+            var texMaxX = 0.5;
+            var texMinY = 0.5;
+            var texMaxY = 1.0;
             
             if(zIndex > 0 && xIndex > 0) {
                 geom.faces.push( new THREE.Face3( (vertIndex-xMax)-1, vertIndex-xMax, vertIndex-1));
+                geom.faceVertexUvs[0].push([new THREE.Vector2(texMinX,texMinY),new THREE.Vector2(texMinX,texMaxY),new THREE.Vector2(texMaxX,texMinY)]);
+                
                 geom.faces.push( new THREE.Face3( vertIndex-1, vertIndex-xMax, vertIndex));
+                geom.faceVertexUvs[0].push([new THREE.Vector2(texMaxX,texMinY),new THREE.Vector2(texMinX,texMaxY),new THREE.Vector2(texMaxX,texMaxY)]);
+
                 faceReference[vertIndex]=geom.faces.length;
             }
             vertIndex+=1;
@@ -31,30 +40,53 @@ function Snow(scene) {
         z -=1;
     }
 
-    geom.computeFaceNormals();
+    var texture = THREE.ImageUtils.loadTexture('images/snow.png');
+    texture.minFilter = THREE.NearestFilter;
+    texture.magFilter = THREE.NearestFilter;
 
-    var materials = [
-        new THREE.MeshLambertMaterial( { color: 0xffffff } ),
-        new THREE.MeshBasicMaterial( { color: 0xffffff, transparent: true, opacity: 0.0 } )
-    ];
-    this.mesh = new THREE.Mesh( geom, new THREE.MeshFaceMaterial( materials ) );
+    geom.computeFaceNormals();
+    this.mesh = new THREE.Mesh( geom, new THREE.MeshLambertMaterial( { 
+        map: texture,
+        transparent: true
+    } ) );
     scene.add(this.mesh);
 
     this.hideFace = function(faceIndex) {
-        if(faceIndex < geom.faces.length && geom.faces[faceIndex].materialIndex==0) {
-            geom.faces[faceIndex].materialIndex = 1;
+        if(faceIndex < geom.faceVertexUvs[0].length) {
+            var faceUvs = geom.faceVertexUvs[0][faceIndex];
+            if(faceIndex % 2 == 0) {
+                faceUvs[0].x = 0.5;
+                faceUvs[0].y = 0.0;
+
+                faceUvs[1].x = 0.5;
+                faceUvs[1].y = 0.5;
+
+                faceUvs[2].x = 1.0;
+                faceUvs[2].y = 0.0;
+            } else {
+                faceUvs[0].x = 1.0;
+                faceUvs[0].y = 0.0;
+
+                faceUvs[1].x = 0.5;
+                faceUvs[1].y = 0.5;
+
+                faceUvs[2].x = 1.0;
+                faceUvs[2].y = 0.5;
+            }
+
+            geom.uvsNeedUpdate = true;
         }
     }
 
     this.hideFacesForVert = function(vertIndex) {
-        // console.log(geom.vertices[vertIndex]);
         this.hideFace(faceReference[vertIndex]);
-        this.hideFace(faceReference[vertIndex]-1);
-        this.hideFace(faceReference[vertIndex]-2);
+        this.hideFace(faceReference[vertIndex]+1);
 
-        this.hideFace(faceReference[vertIndex]-19);
-        this.hideFace(faceReference[vertIndex]-18);
-        this.hideFace(faceReference[vertIndex]-17);
+        // this.hideFace(faceReference[vertIndex]-2);
+
+        // this.hideFace(faceReference[vertIndex]-19);
+        // this.hideFace(faceReference[vertIndex]-18);
+        // this.hideFace(faceReference[vertIndex]-17);
     }
 
     this.update = function(ballPosition, ballWidth) {
