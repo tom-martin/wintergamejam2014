@@ -8,7 +8,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var growRate = 0.5;
     var shrinkRate = 0.6;
 
-    var scale = 1.0;
+    self.scale = 1.0;
 
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
     self.yAxis = new THREE.Vector3(0, 1, 0).normalize();
@@ -23,7 +23,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     self.update = function(tick, otherBalls) {
 
-        applyCollision(otherBalls);
+        applyCollision(otherBalls, tick);
 
         applyTurn(tick, input);
 
@@ -76,7 +76,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         self.direction.applyAxisAngle(self.yAxis, self.yRotation);
     }
 
-    function applyCollision(otherBalls) {
+    function applyCollision(otherBalls, tick) {
         var position = new THREE.Vector2(self.mesh.position.x, self.mesh.position.z);
 
         if (!boundaryRectangle.containsPoint(position)) {
@@ -99,19 +99,27 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
             }
 
             self.yRotation = Math.atan2(-newDirection.z, newDirection.x) + (0.5 * Math.PI);
-        } else if (collidesWithAnyBall(otherBalls)) {
-            self.yRotation += Math.PI;
         }
+
+        applyBallCollision(otherBalls, tick);
     }
 
-    function collidesWithAnyBall(otherBalls) {
-        return !otherBalls.every(function(ball) {
-            return !collidesWithBall(ball);
+    function applyBallCollision(otherBalls, tick) {
+        otherBalls.forEach(function(otherBall) {
+            if (otherBall != self) {
+                if (collidesWithBall(otherBall)) {
+                    if (otherBall.scale > self.scale) {
+                        self.shrink(tick * 5);
+                    } else if (otherBall.scale < self.scale) {
+                        self.grow(tick * 5);
+                    }
+                }
+            }
         });
     }
 
     function collidesWithBall(otherBall) {
-        return (otherBall != self) && (self.mesh.position.distanceTo(otherBall.mesh.position) < ((otherBall.mesh.scale.x * Radius) + (self.mesh.scale.x * Radius)));
+        return self.mesh.position.distanceTo(otherBall.mesh.position) < ((otherBall.scale * Radius) + (self.scale * Radius));
     }
 
     function applyRotation(tick) {
@@ -123,19 +131,15 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     }
 
     function applyScale() {
-        self.mesh.scale.set(scale, scale, scale);
+        self.mesh.scale.set(self.scale, self.scale, self.scale);
     }
 
     self.grow = function(tick) {
-        scale += (growRate * tick);
-        scale += (growRate * tick);
-        scale += (growRate * tick);
+        self.scale += (growRate * tick);
     };
 
     self.shrink = function(tick) {
-        scale -= (shrinkRate * tick);
-        scale -= (shrinkRate * tick);
-        scale -= (shrinkRate * tick);
+        self.scale -= (shrinkRate * tick);
     };
 
     return self;
