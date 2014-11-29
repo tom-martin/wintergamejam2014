@@ -1,4 +1,4 @@
-function Ball(scene, startPosition, boundaryRectangle) {
+function Ball(scene, startPosition, boundaryRectangle, input) {
 
     var self = this;
 
@@ -19,7 +19,7 @@ function Ball(scene, startPosition, boundaryRectangle) {
 
     scene.add(self.mesh);
 
-    self.update = function(tick, input, otherBalls) {
+    self.update = function(tick, otherBalls) {
 
         applyCollision(otherBalls);
 
@@ -102,7 +102,7 @@ function Ball(scene, startPosition, boundaryRectangle) {
     }
 
     function collidesWithBall(otherBall) {
-        return (self.mesh.position.distanceTo(otherBall.mesh.position) < ((otherBall.mesh.scale.x * Radius) + (self.mesh.scale.x * Radius)));
+        return (otherBall != self) && (self.mesh.position.distanceTo(otherBall.mesh.position) < ((otherBall.mesh.scale.x * Radius) + (self.mesh.scale.x * Radius)));
     }
 
     function applyRotation(tick) {

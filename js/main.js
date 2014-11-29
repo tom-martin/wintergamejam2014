@@ -1,7 +1,7 @@
-var input1 = new Input(87, 83, 65, 68);
-var input2 = new Input(38, 40, 37, 39);
-var input3 = new Input(89, 72, 71, 74);
-var input4 = new Input(80, 186, 76, 222);
+// var input1 = new Input(87, 83, 65, 68);
+// var input2 = new Input(38, 40, 37, 39);
+// var input3 = new Input(89, 72, 71, 74);
+// var input4 = new Input(80, 186, 76, 222);
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -28,10 +28,9 @@ scene.add( directionalLight );
 
 var snow = new Snow(scene);
 var boundary = new THREE.Box2(new THREE.Vector2(-50, -50), new THREE.Vector2(50, 50));
-var ball1 = new Ball(scene, new THREE.Vector3(20, 0, 0), boundary);
-var ball2 = new Ball(scene, new THREE.Vector3(10, 0, 0), boundary);
-var ball3 = new Ball(scene, new THREE.Vector3(-10, 0, 0), boundary);
-var ball4 = new Ball(scene, new THREE.Vector3(-20, 0, 0), boundary);
+
+var balls = [new Ball(scene, new THREE.Vector3(10, 0, 0), boundary, new Input(87, 83, 65, 68)), 
+			 new Ball(scene, new THREE.Vector3(20, 0, 0), boundary, new Input(38, 40, 37, 39))];
 
 var geometry = new THREE.PlaneBufferGeometry( 200, 200, 2 );
 var floorTexture = THREE.ImageUtils.loadTexture('images/grass.png');
@@ -60,24 +59,30 @@ var render = function () {
   var tick = Math.min(0.1, (now - lastFrameTime) / 1000);
   lastFrameTime = now;
 
-  ball1.update(tick, input1, [ball2, ball3, ball4]);
-  ball2.update(tick, input2, [ball1, ball3, ball4]);
-  ball3.update(tick, input3, [ball1, ball2, ball4]);
-  ball4.update(tick, input4, [ball1, ball2, ball3]);
+  camBoundary.min.set(10000, 10000);
+  camBoundary.max.set(-10000, -10000);
 
-  camBoundary.min.x = Math.min(ball1.mesh.position.x, ball2.mesh.position.x, ball3.mesh.position.x, ball4.mesh.position.x);
-  camBoundary.min.y = Math.min(ball1.mesh.position.z, ball2.mesh.position.z, ball3.mesh.position.z, ball4.mesh.position.z);
-  camBoundary.max.x = Math.max(ball1.mesh.position.x, ball2.mesh.position.x, ball3.mesh.position.x, ball4.mesh.position.x);
-  camBoundary.max.y = Math.max(ball1.mesh.position.z, ball2.mesh.position.z, ball3.mesh.position.z, ball4.mesh.position.z);
+  for(var ballI in balls) {
+  	var ball = balls[ballI];
 
-  snow.update(tick, [ball1, ball2, ball3, ball4]);
+  	ball.update(tick, balls);
+
+  	camBoundary.min.x = Math.min(ball.mesh.position.x, camBoundary.min.x);
+  	camBoundary.min.y = Math.min(ball.mesh.position.z, camBoundary.min.y);
+
+  	camBoundary.max.x = Math.max(ball.mesh.position.x, camBoundary.max.x);
+  	camBoundary.max.y = Math.max(ball.mesh.position.z, camBoundary.max.y);
+  }
+
+
+  snow.update(tick, balls);
 
   ballDiff.x = camBoundary.max.x;
   ballDiff.z = camBoundary.max.y;
   ballDiff.x -= camBoundary.min.x;
   ballDiff.z -= camBoundary.min.y;
 
-  camera.position.y = Math.abs(ballDiff.length()*0.6);
+  camera.position.y = Math.abs(ballDiff.length());
 
   camBoundary.center(ballCentre);
 
@@ -86,7 +91,7 @@ var render = function () {
 
   // camera.lookAt(ballCentre);
 
-  snow.update([ball1, ball2]);
+  snow.update(balls);
 
   renderer.render(scene, camera);
 
