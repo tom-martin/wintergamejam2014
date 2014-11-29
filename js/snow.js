@@ -108,7 +108,7 @@ function Snow(scene) {
                             diff.copy(geom.vertices[vertIndex]);
                             diff.sub(ball.previousPosition)
                             dist = Math.abs(diff.lengthSq());
-                            console.log(dist)
+
                             if (dist < ballWidth*ballWidth)
                                 ball.shrink(tick);
                         }
