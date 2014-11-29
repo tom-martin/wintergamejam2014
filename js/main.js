@@ -61,7 +61,7 @@ var render = function () {
   ball3.update(tick, input3);
   ball4.update(tick, input4);
 
-  snow.update([ball1, ball2, ball3, ball4]);
+  snow.update(tick, [ball1, ball2, ball3, ball4]);
 
   renderer.render(scene, camera);
 
