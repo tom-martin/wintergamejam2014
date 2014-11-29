@@ -7,8 +7,10 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var Radius = 0.5;
     var TurnSpeed = 10.0;
     var RotationSpeed = 75.0;
-    var growRate = 0.5;
-    var shrinkRate = 0.6;
+    var growRate = 0.6;
+    var shrinkRate = 0.1;
+
+    self.previousPosition = startPosition.clone();
 
     self.scale = 1.0;
 
@@ -67,6 +69,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         var movement = movementVector(tick);
         self.mesh.position.x += movement.x;
         self.mesh.position.z += movement.y;
+        self.previousPosition = self.mesh.position.clone();
     }
 
     function applyTurn(tick, input) {

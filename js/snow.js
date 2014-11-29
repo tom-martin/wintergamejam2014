@@ -73,12 +73,13 @@ function Snow(scene) {
                 faceUvs[2].x = 1.0;
                 faceUvs[2].y = 0.5;
             }
-
             geom.uvsNeedUpdate = true;
         }
     };
 
+    var clearedSnow = [];
     self.hideFacesForVert = function(vertIndex) {
+        clearedSnow[vertIndex] = true;
         self.hideFace(faceReference[vertIndex]);
         self.hideFace(faceReference[vertIndex]+1);
     };
@@ -95,15 +96,25 @@ function Snow(scene) {
 
             for(var currentRow = startingVert; currentRow < geom.vertices.length; currentRow+=xMax) {
                 for(var vertIndex = currentRow; (vertIndex < (currentRow+10) && vertIndex < geom.vertices.length); vertIndex++) {
-    				diff.copy(geom.vertices[vertIndex]);
-    				diff.sub(ballPosition);
-    				var dist = Math.abs(diff.lengthSq());
-    				if(dist < ballWidth*ballWidth) {
-    					self.hideFacesForVert(vertIndex);
-    				}
-    			}
+                    diff.copy(geom.vertices[vertIndex]);
+                    diff.sub(ballPosition);
+                    var dist = Math.abs(diff.lengthSq());
+                    if(dist < ballWidth*ballWidth) {
+                        if (!clearedSnow[vertIndex]) {
+                            self.hideFacesForVert(vertIndex);
+                            ball.grow(tick);
+
+                        } else {
+                            diff.copy(geom.vertices[vertIndex]);
+                            diff.sub(ball.previousPosition)
+                            dist = Math.abs(diff.lengthSq());
+                            console.log(dist)
+                            if (dist < ballWidth*ballWidth)
+                                ball.shrink(tick);
+                        }
+                    }
+                }
             }
-            ball.grow(tick);
         }
     }
 
