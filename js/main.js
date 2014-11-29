@@ -15,11 +15,11 @@ var snow = new Snow(scene);
 
 camera.position.y = 15;
 
-var sphereGeometry = new THREE.SphereGeometry( 5, 32, 32 );
-var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+var sphereGeometry = new THREE.SphereGeometry( 5, 6, 6 );
+var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
 var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
 
-//scene.add( sphere );
+scene.add( sphere );
 
 
 
@@ -27,8 +27,8 @@ var render = function () {
   requestAnimationFrame( render );
 
   camera.lookAt(snow.mesh.position);
-  sphere.rotation.x += 0.1;
-  sphere.rotation.y += 0.1;
+  sphere.rotation.x += 0.01;
+  sphere.rotation.y += 0.01;
 
   renderer.render(scene, camera);
 };
