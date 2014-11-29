@@ -14,23 +14,19 @@ directionalLight.position.set( -1, 1, 0 );
 scene.add( directionalLight );
 
 var snow = new Snow(scene);
+var ball = new Ball(scene);
 
 camera.position.y = 15;
-
-var sphereGeometry = new THREE.SphereGeometry( 5, 6, 6 );
-var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
-var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
-
-scene.add( sphere );
 
 
 
 var render = function () {
   requestAnimationFrame( render );
 
+  var input = undefined;
+
   camera.lookAt(snow.mesh.position);
-  sphere.rotation.x += 0.01;
-  sphere.rotation.y += 0.01;
+  ball.update(input);
 
   renderer.render(scene, camera);
 };
