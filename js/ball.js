@@ -4,6 +4,8 @@ function Ball(scene) {
 
     var TurnSpeed = 10.0;
     var RotationSpeed = 75.0;
+    var growRate = 0.05;
+    var shrinkRate = 0.1;
 
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
     self.yAxis = new THREE.Vector3(0, 1, 0).normalize();
@@ -68,6 +70,18 @@ function Ball(scene) {
         self.mesh.rotation.set(0, 0, 0);
         self.mesh.rotateOnAxis( self.yAxis, self.yRotation );
         self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
+    }
+
+    self.grow = function() {
+        self.mesh.scale.x += growRate;
+        self.mesh.scale.y += growRate;
+        self.mesh.scale.z += growRate;
+    }
+
+    self.shrink = function() {
+        self.mesh.scale.x -= shrinkRate;
+        self.mesh.scale.y -= shrinkRate;
+        self.mesh.scale.z -= shrinkRate;
     }
 
     return self;
