@@ -43,11 +43,15 @@ plane.position.y = -5;
 plane.rotation.set(-Math.PI/2, 0, 0);
 scene.add( plane );
 
-camera.position.y = 80;
+camera.position.y = 100;
 
 var lastFrameTime = Date.now();
 camera.lookAt(new THREE.Vector3(0, 0, 0.1));
 
+var ballDiff = new THREE.Vector3();
+var ballCentre = new THREE.Vector2();
+
+var camBoundary = new THREE.Box2(new THREE.Vector2(-50, -50), new THREE.Vector2(50, 50));
 
 var render = function () {
   stats.begin();
@@ -61,7 +65,28 @@ var render = function () {
   ball3.update(tick, input3);
   ball4.update(tick, input4);
 
+  camBoundary.min.x = Math.min(ball1.mesh.position.x, ball2.mesh.position.x, ball3.mesh.position.x, ball4.mesh.position.x);
+  camBoundary.min.y = Math.min(ball1.mesh.position.z, ball2.mesh.position.z, ball3.mesh.position.z, ball4.mesh.position.z);
+  camBoundary.max.x = Math.max(ball1.mesh.position.x, ball2.mesh.position.x, ball3.mesh.position.x, ball4.mesh.position.x);
+  camBoundary.max.y = Math.max(ball1.mesh.position.z, ball2.mesh.position.z, ball3.mesh.position.z, ball4.mesh.position.z);
+
   snow.update([ball1, ball2, ball3, ball4]);
+
+  ballDiff.x = camBoundary.max.x;
+  ballDiff.z = camBoundary.max.y;
+  ballDiff.x -= camBoundary.min.x;
+  ballDiff.z -= camBoundary.min.y;
+
+  camera.position.y = Math.abs(ballDiff.length()*0.6);
+
+  camBoundary.center(ballCentre);
+
+  camera.position.x = (ballCentre.x);
+  camera.position.z = (ballCentre.y);
+
+  // camera.lookAt(ballCentre);
+
+  snow.update([ball1, ball2]);
 
   renderer.render(scene, camera);
 

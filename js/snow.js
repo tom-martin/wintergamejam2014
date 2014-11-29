@@ -6,7 +6,7 @@ function Snow(scene) {
 		return factor - (Math.random() * (factor * 2));
 	};
     var xMax = 200;
-    var zMax = 100;
+    var zMax = 200;
 
     var geom = new THREE.Geometry();
     var vertIndex = 0;
