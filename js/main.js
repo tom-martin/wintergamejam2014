@@ -14,12 +14,16 @@ scene.add( directionalLight );
 var geometry = new THREE.BoxGeometry( 1, 1, 1 );
 var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
 var cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+// scene.add( cube );
 
-camera.position.z = 5;
+var snow = new Snow(scene);
+
+camera.position.y = 5;
 
 var render = function () {
   requestAnimationFrame( render );
+
+  camera.lookAt(snow.mesh.position);
 
   cube.rotation.x += 0.1;
   cube.rotation.y += 0.1;
