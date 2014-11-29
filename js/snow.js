@@ -103,7 +103,7 @@ function Snow(scene) {
     				}
     			}
             }
-            doSomething(tick, ball.grow);
+            ball.grow(tick);
         }
     }
 
@@ -111,14 +111,4 @@ function Snow(scene) {
         var ballScale = ball.mesh.scale.x;
         return (ballScale * ball.mesh.geometry.boundingSphere.radius)
     }
-
-    var lastAction = 0;
-    function doSomething(tick, f) {
-        lastAction += tick;
-        if (lastAction > 3) {
-            f();
-            lastAction = 0;
-        }
-    }
-
 }

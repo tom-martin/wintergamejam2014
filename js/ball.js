@@ -100,16 +100,16 @@ function Ball(scene, startPosition, boundaryRectangle) {
         self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
     }
 
-    self.grow = function() {
-        self.mesh.scale.x += growRate;
-        self.mesh.scale.y += growRate;
-        self.mesh.scale.z += growRate;
+    self.grow = function(tick) {
+        self.mesh.scale.x += (growRate * tick);
+        self.mesh.scale.y += (growRate * tick);
+        self.mesh.scale.z += (growRate * tick);
     };
 
-    self.shrink = function() {
-        self.mesh.scale.x -= shrinkRate;
-        self.mesh.scale.y -= shrinkRate;
-        self.mesh.scale.z -= shrinkRate;
+    self.shrink = function(tick) {
+        self.mesh.scale.x -= (shrinkRate * tick);
+        self.mesh.scale.y -= (shrinkRate * tick);
+        self.mesh.scale.z -= (shrinkRate * tick);
     };
 
     return self;
