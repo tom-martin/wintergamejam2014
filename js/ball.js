@@ -5,10 +5,12 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var juiceSeed = Math.random()*10000;
 
     var Radius = 0.5;
-    var TurnSpeed = 10.0;
+    var TurnSpeed = 15.0;
     var RotationSpeed = 75.0;
-    var growRate = 0.3;
-    var shrinkRate = 0.3;
+    var growRate = 0.5;
+    var shrinkRate = 1.0;
+
+    var MaxScale = 30;
 
     self.previousPosition = startPosition.clone();
 
@@ -17,13 +19,12 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
     self.yAxis = new THREE.Vector3(0, 1, 0).normalize();
     self.xAxis = new THREE.Vector3(1, 0, 0).normalize();
-    self.speed = 20.0;
+    self.speed = 50.0;
     self.mesh = createMesh(startPosition);
 
     self.yRotation = 0;
     self.xRotation = 0;
 
-    self.growing = false;
     self.shrinking = false;
 
     scene.add(self.mesh);
@@ -152,8 +153,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     function applyScale(now) {
         var growth = 0;
-        if(self.growing) {
-            growth = Util.juiceBounce(now, juiceSeed, 750, (self.scale/2));
+        if(!self.shrinking) {
+            // growth = Util.juiceBounce(now, juiceSeed, 750, (self.scale/2));
         }
         var newScale = self.scale + growth;
 
@@ -161,21 +162,16 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     }
 
     self.grow = function(tick) {
-        self.growing = true;
-        self.shrinking = false;
-
-        self.scale += (growRate * tick);
+        self.scale = Math.min(MaxScale, self.scale + (growRate * tick));
     };
 
     self.shrink = function(tick) {
-        self.growing = false;
         self.shrinking = true;
 
         self.scale -= (shrinkRate * tick);
     };
 
     function clearFlags() {
-        self.growing = false;
         self.shrinking = false;
     }
 

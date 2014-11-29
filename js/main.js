@@ -82,7 +82,7 @@ var render = function () {
   ballDiff.x -= camBoundary.min.x;
   ballDiff.z -= camBoundary.min.y;
 
-  camera.position.y = Math.abs(ballDiff.length());
+  camera.position.y = Math.max(30, Math.abs(ballDiff.length()));
 
   camBoundary.center(ballCentre);
 
