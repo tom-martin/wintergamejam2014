@@ -1,4 +1,4 @@
-function Ball(scene) {
+function Ball(scene, startPosition) {
 
     var self = this;
 
@@ -10,8 +10,8 @@ function Ball(scene) {
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
     self.yAxis = new THREE.Vector3(0, 1, 0).normalize();
     self.xAxis = new THREE.Vector3(1, 0, 0).normalize();
-    self.speed = 50.0;
-    self.mesh = createMesh();
+    self.speed = 20.0;
+    self.mesh = createMesh(startPosition);
 
     self.yRotation = 0;
     self.xRotation = 0;
@@ -26,10 +26,14 @@ function Ball(scene) {
         applyRotation(tick);
     };
 
-    function createMesh() {
+    function createMesh(startPosition) {
         var sphereGeometry = new THREE.SphereGeometry( 0.5, 8, 8 );
         var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
-        return new THREE.Mesh( sphereGeometry, sphereMaterial );
+        var mesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
+        mesh.position.x += startPosition.x;
+        mesh.position.y += startPosition.y;
+        mesh.position.z += startPosition.z;
+        return mesh;
     }
 
     function shouldTurnLeft(input) {
