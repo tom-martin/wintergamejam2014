@@ -1,4 +1,5 @@
-var input = new Input();
+var input1 = new Input(87, 83, 65, 68);
+var input2 = new Input(38, 40, 37, 39);
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -24,7 +25,8 @@ directionalLight.position.set( -1, 1, 0 );
 scene.add( directionalLight );
 
 var snow = new Snow(scene);
-var ball = new Ball(scene);
+var ball1 = new Ball(scene);
+var ball2 = new Ball(scene);
 
 camera.position.y = 80;
 
@@ -39,9 +41,10 @@ var render = function () {
   var tick = Math.min(0.1, (now - lastFrameTime) / 1000);
   lastFrameTime = now;
 
-  ball.update(tick, input);
+  ball1.update(tick, input1);
+  ball2.update(tick, input2);
 
-  snow.update(ball.mesh.position, 1.0);
+  snow.update([ball1.mesh.position, ball2.mesh.position], 1.0);
 
   renderer.render(scene, camera);
 

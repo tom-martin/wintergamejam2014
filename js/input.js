@@ -1,4 +1,4 @@
-function Input() {
+function Input(upKey, downKey, leftKey, rightKey) {
 	var self = this;
 
 	self.forwardDown = false;
@@ -8,16 +8,16 @@ function Input() {
 
 	this.onKeyChange = function(e, down) {
 
-		if(e.keyCode==87) {
+		if(e.keyCode==upKey) {
 			self.forwardDown = down;
 		}
-		if(e.keyCode==83) {
+		if(e.keyCode==downKey) {
 			self.backwardDown = down;
 		}
-		if(e.keyCode==65) {
+		if(e.keyCode==leftKey) {
 			self.leftDown = down;
 		}
-		if(e.keyCode==68) {
+		if(e.keyCode==rightKey) {
 			self.rightDown = down;
 		}
 	};

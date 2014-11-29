@@ -3,8 +3,8 @@ function Snow(scene) {
     var self = this;
 
     var perturb = function(factor) {
-        return factor-(Math.random()*(factor*2));
-    }
+		return factor - (Math.random() * (factor * 2));
+	};
     var xMax = 200;
     var zMax = 100;
 
@@ -45,13 +45,13 @@ function Snow(scene) {
     texture.magFilter = THREE.NearestFilter;
 
     geom.computeFaceNormals();
-    this.mesh = new THREE.Mesh( geom, new THREE.MeshLambertMaterial( { 
+    self.mesh = new THREE.Mesh( geom, new THREE.MeshLambertMaterial( {
         map: texture,
         transparent: true
     } ) );
-    scene.add(this.mesh);
+    scene.add(self.mesh);
 
-    this.hideFace = function(faceIndex) {
+    self.hideFace = function(faceIndex) {
         if(faceIndex < geom.faceVertexUvs[0].length) {
             var faceUvs = geom.faceVertexUvs[0][faceIndex];
             if(faceIndex % 2 == 0) {
@@ -76,28 +76,30 @@ function Snow(scene) {
 
             geom.uvsNeedUpdate = true;
         }
-    }
+    };
 
-    this.hideFacesForVert = function(vertIndex) {
-        this.hideFace(faceReference[vertIndex]);
-        this.hideFace(faceReference[vertIndex]+1);
+    self.hideFacesForVert = function(vertIndex) {
+        self.hideFace(faceReference[vertIndex]);
+        self.hideFace(faceReference[vertIndex]+1);
 
-        // this.hideFace(faceReference[vertIndex]-2);
+        // self.hideFace(faceReference[vertIndex]-2);
 
-        // this.hideFace(faceReference[vertIndex]-19);
-        // this.hideFace(faceReference[vertIndex]-18);
-        // this.hideFace(faceReference[vertIndex]-17);
-    }
+        // self.hideFace(faceReference[vertIndex]-19);
+        // self.hideFace(faceReference[vertIndex]-18);
+        // self.hideFace(faceReference[vertIndex]-17);
+    };
 
-    this.update = function(ballPosition, ballWidth) {
+    self.update = function(ballPositions, ballWidth) {
         var diff = new THREE.Vector3(0, 0, 0);
         for(var vert in geom.vertices) {
-            diff.copy(geom.vertices[vert]);
-            diff.sub(ballPosition)
-            var dist = Math.abs(diff.lengthSq());
-            if(dist < ballWidth*ballWidth) {
-                this.hideFacesForVert(vert);
-            }
+			for (var ballPosition in ballPositions) {
+				diff.copy(geom.vertices[vert]);
+				diff.sub(ballPositions[ballPosition]);
+				var dist = Math.abs(diff.lengthSq());
+				if(dist < ballWidth*ballWidth) {
+					self.hideFacesForVert(vert);
+				}
+			}
         }
     }
 

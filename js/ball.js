@@ -14,7 +14,7 @@ function Ball(scene) {
     self.yRotation = 0;
     self.xRotation = 0;
 
-    scene.add(this.mesh);
+    scene.add(self.mesh);
 
     self.update = function(tick, input) {
         applyTurn(tick, input);
@@ -69,4 +69,6 @@ function Ball(scene) {
         self.mesh.rotateOnAxis( self.yAxis, self.yRotation );
         self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
     }
+
+    return self;
 }
