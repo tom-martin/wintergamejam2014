@@ -2,13 +2,13 @@ function Ball(scene) {
 
     var self = this;
 
-    var TurnSpeed = 5.0;
-    var RotationSpeed = 5.0;
+    var TurnSpeed = 10.0;
+    var RotationSpeed = 75.0;
 
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
     self.yAxis = new THREE.Vector3(0, 1, 0).normalize();
     self.xAxis = new THREE.Vector3(1, 0, 0).normalize();
-    self.speed = 5.0;
+    self.speed = 50.0;
     self.mesh = createMesh();
 
     self.yRotation = 0;
@@ -25,7 +25,7 @@ function Ball(scene) {
     };
 
     function createMesh() {
-        var sphereGeometry = new THREE.SphereGeometry( 2, 8, 8 );
+        var sphereGeometry = new THREE.SphereGeometry( 0.5, 8, 8 );
         var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
         return new THREE.Mesh( sphereGeometry, sphereMaterial );
     }

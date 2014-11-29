@@ -26,7 +26,7 @@ scene.add( directionalLight );
 var snow = new Snow(scene);
 var ball = new Ball(scene);
 
-camera.position.y = 40;
+camera.position.y = 80;
 
 var lastFrameTime = Date.now();
 camera.lookAt(new THREE.Vector3(0, 0, 0.1));
@@ -34,14 +34,14 @@ camera.lookAt(new THREE.Vector3(0, 0, 0.1));
 
 var render = function () {
   stats.begin();
-  
+
   var now = Date.now();
   var tick = Math.min(0.1, (now - lastFrameTime) / 1000);
   lastFrameTime = now;
 
   ball.update(tick, input);
 
-  snow.update(ball.mesh.position, 2.0);
+  snow.update(ball.mesh.position, 1.0);
 
   renderer.render(scene, camera);
 
