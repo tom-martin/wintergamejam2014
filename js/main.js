@@ -19,8 +19,13 @@ var ball = new Ball(scene);
 camera.position.y = 15;
 
 
+var lastFrameTime = Date.now();
 
 var render = function () {
+  var now = Date.now();
+  var tick = Math.min(0.1, (now - lastFrameTime) / 1000);
+  lastFrameTime = now;
+  
   requestAnimationFrame( render );
 
   var input = undefined;
