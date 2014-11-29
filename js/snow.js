@@ -5,7 +5,7 @@ function Snow(scene) {
     var perturb = function(factor) {
 		return factor - (Math.random() * (factor * 2));
 	};
-    var xMax = 200;
+    var xMax = 300;
     var zMax = 200;
 
     var geom = new THREE.Geometry();
