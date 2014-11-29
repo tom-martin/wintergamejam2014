@@ -109,7 +109,7 @@ function Snow(scene) {
                             diff.sub(ball.previousPosition)
                             dist = Math.abs(diff.lengthSq());
 
-                            if (dist < ballWidth*ballWidth)
+                            if (dist > ballWidth*ballWidth)
                                 ball.shrink(tick);
                         }
                     }
