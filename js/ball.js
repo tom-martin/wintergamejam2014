@@ -2,12 +2,17 @@ function Ball(scene) {
 
     var self = this;
 
-    var TurnSpeed = 1.0;
-    var RotationSpeed = 0.5;
+    var TurnSpeed = 5.0;
+    var RotationSpeed = 5.0;
 
-    self.direction = new THREE.Vector2(1, 1).normalize();
-    self.speed = 2.0;
+    self.direction = new THREE.Vector3(0, 0, 1).normalize();
+    self.yAxis = new THREE.Vector3(0, 1, 0).normalize();
+    self.xAxis = new THREE.Vector3(1, 0, 0).normalize();
+    self.speed = 5.0;
     self.mesh = createMesh();
+
+    self.yRotation = 0;
+    self.xRotation = 0;
 
     scene.add(this.mesh);
 
@@ -16,11 +21,11 @@ function Ball(scene) {
 
         applyMovement(tick);
 
-        applyAestheticRotation(tick);
+        applyRotation(tick);
     };
 
     function createMesh() {
-        var sphereGeometry = new THREE.SphereGeometry( 5, 8, 8 );
+        var sphereGeometry = new THREE.SphereGeometry( 2, 8, 8 );
         var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
         return new THREE.Mesh( sphereGeometry, sphereMaterial );
     }
@@ -34,7 +39,7 @@ function Ball(scene) {
     }
 
     function movementVector(tick) {
-        return new THREE.Vector2(self.direction.x * self.speed * tick, self.direction.y * self.speed * tick);
+        return new THREE.Vector2(self.direction.x * self.speed * tick, self.direction.z * self.speed * tick);
     }
 
     function applyMovement(tick) {
@@ -45,22 +50,23 @@ function Ball(scene) {
 
     function applyTurn(tick, input) {
 
-        var zAxis = new THREE.Vector3(0, 0, 1);
-        var vector3 = new THREE.Vector3(self.direction.x, self.direction.y, 0);
+        self.direction = new THREE.Vector3(0, 0, 1);
 
         if (shouldTurnLeft(input)) {
-            vector3.applyAxisAngle(zAxis, -(TurnSpeed * tick));
+            self.yRotation += (TurnSpeed * tick);
         }
         if (shouldTurnRight(input)) {
-            vector3.applyAxisAngle(zAxis, (TurnSpeed * tick));
+            self.yRotation -= (TurnSpeed * tick);
         }
 
-        self.direction = new THREE.Vector2(vector3.x, vector3.y);
+        self.direction.applyAxisAngle(self.yAxis, self.yRotation);
     }
 
-    function applyAestheticRotation(tick) {
+    function applyRotation(tick) {
+        self.xRotation += RotationSpeed*tick;
 
-        var axis = new THREE.Vector3(0,1,0).cross(new THREE.Vector3(self.direction.x, 0, self.direction.y));
-        self.mesh.rotateOnAxis( axis, RotationSpeed * tick );
+        self.mesh.rotation.set(0, 0, 0);
+        self.mesh.rotateOnAxis( self.yAxis, self.yRotation );
+        self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
     }
 }
