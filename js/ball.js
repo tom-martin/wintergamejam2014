@@ -1,12 +1,14 @@
 function Ball(scene) {
 
-    var TurnSpeed = 1.0;
-
     var self = this;
 
-    var sphereGeometry = new THREE.SphereGeometry( 0.5, 6, 6 );
-    var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
-    self.mesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
+    var TurnSpeed = 1.0;
+    var RotationSpeed = 0.5;
+
+    self.direction = new THREE.Vector2(1, 1).normalize();
+    self.speed = 2.0;
+    self.mesh = createMesh();
+
     scene.add(this.mesh);
 
     self.update = function(tick, input) {
@@ -14,11 +16,14 @@ function Ball(scene) {
 
         applyMovement(tick);
 
-        applyAestheticRotation();
+        applyAestheticRotation(tick);
     };
 
-    self.direction = new THREE.Vector2(0.0, 1.0);
-    self.speed = 2.0;
+    function createMesh() {
+        var sphereGeometry = new THREE.SphereGeometry( 5, 8, 8 );
+        var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+        return new THREE.Mesh( sphereGeometry, sphereMaterial );
+    }
 
     function shouldTurnLeft(input) {
         return input.leftDown && !input.rightDown;
@@ -28,9 +33,14 @@ function Ball(scene) {
         return input.rightDown && !input.leftDown;
     }
 
+    function movementVector(tick) {
+        return new THREE.Vector2(self.direction.x * self.speed * tick, self.direction.y * self.speed * tick);
+    }
+
     function applyMovement(tick) {
-        self.mesh.translateX(self.direction.x * self.speed * tick);
-        self.mesh.translateZ(self.direction.y * self.speed * tick);
+        var movement = movementVector(tick);
+        self.mesh.position.x += movement.x;
+        self.mesh.position.z += movement.y;
     }
 
     function applyTurn(tick, input) {
@@ -48,8 +58,9 @@ function Ball(scene) {
         self.direction = new THREE.Vector2(vector3.x, vector3.y);
     }
 
-    function applyAestheticRotation() {
-        self.mesh.rotation.x += 0.01;
-        self.mesh.rotation.y += 0.01;
+    function applyAestheticRotation(tick) {
+
+        var axis = new THREE.Vector3(0,1,0).cross(new THREE.Vector3(self.direction.x, 0, self.direction.y));
+        self.mesh.rotateOnAxis( axis, RotationSpeed * tick );
     }
 }
