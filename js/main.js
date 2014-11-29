@@ -54,7 +54,7 @@ var render = function () {
   ball1.update(tick, input1);
   ball2.update(tick, input2);
 
-  snow.update([ball1.mesh.position, ball2.mesh.position], 1.0);
+  snow.update([ball1, ball2]);
 
   renderer.render(scene, camera);
 

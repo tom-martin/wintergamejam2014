@@ -1,4 +1,4 @@
-function Snow(scene) { 
+function Snow(scene) {
 
     var self = this;
 
@@ -19,16 +19,16 @@ function Snow(scene) {
         for(var xIndex = 0; xIndex < xMax; xIndex+=1) {
 
             geom.vertices.push(new THREE.Vector3(x+perturb(0.25), perturb(0.25), z+perturb(0.25)));
-            
+
             var texMinX = 0.0;
             var texMaxX = 0.5;
             var texMinY = 0.5;
             var texMaxY = 1.0;
-            
+
             if(zIndex > 0 && xIndex > 0) {
                 geom.faces.push( new THREE.Face3( (vertIndex-xMax)-1, vertIndex-xMax, vertIndex-1));
                 geom.faceVertexUvs[0].push([new THREE.Vector2(texMinX,texMinY),new THREE.Vector2(texMinX,texMaxY),new THREE.Vector2(texMaxX,texMinY)]);
-                
+
                 geom.faces.push( new THREE.Face3( vertIndex-1, vertIndex-xMax, vertIndex));
                 geom.faceVertexUvs[0].push([new THREE.Vector2(texMaxX,texMinY),new THREE.Vector2(texMinX,texMaxY),new THREE.Vector2(texMaxX,texMaxY)]);
 
@@ -89,18 +89,26 @@ function Snow(scene) {
         // self.hideFace(faceReference[vertIndex]-17);
     };
 
-    self.update = function(ballPositions, ballWidth) {
+    self.update = function(balls) {
         var diff = new THREE.Vector3(0, 0, 0);
-        for(var vert in geom.vertices) {
-			for (var ballPosition in ballPositions) {
-				diff.copy(geom.vertices[vert]);
-				diff.sub(ballPositions[ballPosition]);
-				var dist = Math.abs(diff.lengthSq());
-				if(dist < ballWidth*ballWidth) {
-					self.hideFacesForVert(vert);
-				}
-			}
+        for(var i in geom.vertices) {
+	    for (var j in balls) {
+                var ball = balls[j];
+
+		diff.copy(geom.vertices[i]);
+		diff.sub(ball.mesh.position);
+		var dist = Math.abs(diff.lengthSq());
+                var ballWidth = getBallWidth(ball);
+		if(dist < ballWidth*ballWidth) {
+		    self.hideFacesForVert(i);
+		}
+	    }
         }
+    }
+
+    function getBallWidth(ball) {
+        var ballScale = ball.mesh.scale.x;
+        return (ballScale * ball.mesh.geometry.boundingSphere.radius)
     }
 
 }
