@@ -25,8 +25,9 @@ directionalLight.position.set( -1, 1, 0 );
 scene.add( directionalLight );
 
 var snow = new Snow(scene);
-var ball1 = new Ball(scene, new THREE.Vector3(10, 0, 0));
-var ball2 = new Ball(scene, new THREE.Vector3(-10, 0, 0));
+var boundary = new THREE.Box2(new THREE.Vector2(-50, -50), new THREE.Vector2(50, 50));
+var ball1 = new Ball(scene, new THREE.Vector3(10, 0, 0), boundary);
+var ball2 = new Ball(scene, new THREE.Vector3(-10, 0, 0), boundary);
 
 var geometry = new THREE.PlaneBufferGeometry( 200, 200, 2 );
 var floorTexture = THREE.ImageUtils.loadTexture('images/grass.png');

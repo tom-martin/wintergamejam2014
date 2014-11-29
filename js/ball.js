@@ -1,4 +1,4 @@
-function Ball(scene, startPosition) {
+function Ball(scene, startPosition, boundaryRectangle) {
 
     var self = this;
 
@@ -19,6 +19,9 @@ function Ball(scene, startPosition) {
     scene.add(self.mesh);
 
     self.update = function(tick, input) {
+
+        applyCollision();
+
         applyTurn(tick, input);
 
         applyMovement(tick);
@@ -68,6 +71,27 @@ function Ball(scene, startPosition) {
         self.direction.applyAxisAngle(self.yAxis, self.yRotation);
     }
 
+    function applyCollision() {
+        var position = new THREE.Vector2(self.mesh.position.x, self.mesh.position.z);
+
+        if (!boundaryRectangle.containsPoint(position)) {
+            if (self.mesh.position.x > boundaryRectangle.max.x) {
+                self.mesh.position.x = boundaryRectangle.max.x - 1;
+            }
+            if (self.mesh.position.x < boundaryRectangle.min.x) {
+                self.mesh.position.x = boundaryRectangle.min.x + 1;
+            }
+            if (self.mesh.position.z > boundaryRectangle.max.y) {
+                self.mesh.position.z = boundaryRectangle.max.y - 1;
+            }
+            if (self.mesh.position.z < boundaryRectangle.min.y) {
+                self.mesh.position.z = boundaryRectangle.min.y + 1;
+            }
+
+            self.yRotation += Math.PI;
+        }
+    }
+
     function applyRotation(tick) {
         self.xRotation += RotationSpeed*tick;
 
@@ -80,13 +104,13 @@ function Ball(scene, startPosition) {
         self.mesh.scale.x += growRate;
         self.mesh.scale.y += growRate;
         self.mesh.scale.z += growRate;
-    }
+    };
 
     self.shrink = function() {
         self.mesh.scale.x -= shrinkRate;
         self.mesh.scale.y -= shrinkRate;
         self.mesh.scale.z -= shrinkRate;
-    }
+    };
 
     return self;
 }
