@@ -29,7 +29,7 @@ scene.add( directionalLight );
 var snow = new Snow(scene);
 var boundary = new THREE.Box2(new THREE.Vector2(-150, -100), new THREE.Vector2(150, 100));
 
-var balls = [new Ball(scene, new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)), 
+var balls = [new Ball(scene, new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)),
 			 new Ball(scene, new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68))];
 
 var geometry = new THREE.PlaneBufferGeometry( 200, 200, 2 );
@@ -72,6 +72,10 @@ var render = function () {
 
   	camBoundary.max.x = Math.max(ball.mesh.position.x, camBoundary.max.x);
   	camBoundary.max.y = Math.max(ball.mesh.position.z, camBoundary.max.y);
+
+    if (ball.scale < 0.1) {
+      ball.kill();
+    }
   }
 
 

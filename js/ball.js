@@ -14,6 +14,9 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     self.previousPosition = startPosition.clone();
 
+    self.isAlive = true;
+    var deadDirection = new THREE.Vector3(Math.random() * 2 - 1, 0.2, Math.random() * 2 - 1).normalize();
+
     self.scale = 1.0;
 
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
@@ -30,17 +33,27 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     scene.add(self.mesh);
 
     var white = new THREE.Color(0xffffff);
+    var red = new THREE.Color(0xff0000);
 
+    self.kill = function() {
+        self.isAlive = false;
+        self.sphereMaterial.color = red;
+        self.mesh.material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
+    };
 
     self.update = function(now, tick, otherBalls) {
+        if (self.isAlive) {
+            applyCollision(otherBalls, tick);
 
-        applyCollision(otherBalls, tick);
+            applyTurn(tick, input);
 
-        applyTurn(tick, input);
+            applyMovement(tick);
 
-        applyMovement(tick);
-
-        applyRotation(tick);
+            applyRotation(tick);
+        } else {
+            self.mesh.position.add(deadDirection.clone().multiplyScalar(tick * 80));
+            self.grow(tick * 5);
+        }
 
         applyScale(now);
 
@@ -127,7 +140,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     function applyBallCollision(otherBalls, tick) {
         otherBalls.forEach(function(otherBall) {
-            if (otherBall != self) {
+            if (otherBall != self && otherBall.isAlive) {
                 if (collidesWithBall(otherBall)) {
                     if (otherBall.scale > self.scale) {
                         self.shrink(tick * 5);
