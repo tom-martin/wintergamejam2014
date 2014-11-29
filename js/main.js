@@ -1,5 +1,7 @@
 var input1 = new Input(87, 83, 65, 68);
 var input2 = new Input(38, 40, 37, 39);
+var input3 = new Input(89, 72, 71, 74);
+var input4 = new Input(80, 186, 76, 222);
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -26,8 +28,10 @@ scene.add( directionalLight );
 
 var snow = new Snow(scene);
 var boundary = new THREE.Box2(new THREE.Vector2(-50, -50), new THREE.Vector2(50, 50));
-var ball1 = new Ball(scene, new THREE.Vector3(10, 0, 0), boundary);
-var ball2 = new Ball(scene, new THREE.Vector3(-10, 0, 0), boundary);
+var ball1 = new Ball(scene, new THREE.Vector3(20, 0, 0), boundary);
+var ball2 = new Ball(scene, new THREE.Vector3(10, 0, 0), boundary);
+var ball3 = new Ball(scene, new THREE.Vector3(-10, 0, 0), boundary);
+var ball4 = new Ball(scene, new THREE.Vector3(-20, 0, 0), boundary);
 
 var geometry = new THREE.PlaneBufferGeometry( 200, 200, 2 );
 var floorTexture = THREE.ImageUtils.loadTexture('images/grass.png');
@@ -54,8 +58,10 @@ var render = function () {
 
   ball1.update(tick, input1);
   ball2.update(tick, input2);
+  ball3.update(tick, input3);
+  ball4.update(tick, input4);
 
-  snow.update([ball1, ball2]);
+  snow.update([ball1, ball2, ball3, ball4]);
 
   renderer.render(scene, camera);
 
