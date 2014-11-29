@@ -83,9 +83,8 @@ function Snow(scene) {
         self.hideFace(faceReference[vertIndex]+1);
     };
 
-    self.update = function(balls) {
+    self.update = function(tick, balls) {
         var diff = new THREE.Vector3(0, 0, 0);
-
         for (var ballIndex in balls) {
             var ball = balls[ballIndex]
             var ballPosition = ball.mesh.position;
@@ -104,12 +103,22 @@ function Snow(scene) {
     				}
     			}
             }
+            doSomething(tick, ball.grow);
         }
     }
 
     function getBallWidth(ball) {
         var ballScale = ball.mesh.scale.x;
         return (ballScale * ball.mesh.geometry.boundingSphere.radius)
+    }
+
+    var lastAction = 0;
+    function doSomething(tick, f) {
+        lastAction += tick;
+        if (lastAction > 3) {
+            f();
+            lastAction = 0;
+        }
     }
 
 }

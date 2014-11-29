@@ -4,8 +4,8 @@ function Ball(scene, startPosition, boundaryRectangle) {
 
     var TurnSpeed = 10.0;
     var RotationSpeed = 75.0;
-    var growRate = 0.2;
-    var shrinkRate = 0.3;
+    var growRate = 0.5;
+    var shrinkRate = 0.6;
 
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
     self.yAxis = new THREE.Vector3(0, 1, 0).normalize();

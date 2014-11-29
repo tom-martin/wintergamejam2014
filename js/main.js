@@ -70,7 +70,7 @@ var render = function () {
   camBoundary.max.x = Math.max(ball1.mesh.position.x, ball2.mesh.position.x, ball3.mesh.position.x, ball4.mesh.position.x);
   camBoundary.max.y = Math.max(ball1.mesh.position.z, ball2.mesh.position.z, ball3.mesh.position.z, ball4.mesh.position.z);
 
-  snow.update([ball1, ball2, ball3, ball4]);
+  snow.update(tick, [ball1, ball2, ball3, ball4]);
 
   ballDiff.x = camBoundary.max.x;
   ballDiff.z = camBoundary.max.y;
