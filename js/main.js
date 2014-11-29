@@ -28,6 +28,16 @@ var snow = new Snow(scene);
 var ball1 = new Ball(scene);
 var ball2 = new Ball(scene);
 
+var geometry = new THREE.PlaneBufferGeometry( 200, 200, 2 );
+var floorTexture = THREE.ImageUtils.loadTexture('images/grass.png');
+floorTexture.minFilter = THREE.NearestFilter;
+floorTexture.magFilter = THREE.NearestFilter;
+var material = new THREE.MeshLambertMaterial( {map: floorTexture} );
+var plane = new THREE.Mesh( geometry, material );
+plane.position.y = -5;
+plane.rotation.set(-Math.PI/2, 0, 0);
+scene.add( plane );
+
 camera.position.y = 80;
 
 var lastFrameTime = Date.now();
