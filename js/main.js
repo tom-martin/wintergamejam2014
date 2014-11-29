@@ -65,7 +65,7 @@ var render = function () {
   for(var ballI in balls) {
   	var ball = balls[ballI];
 
-  	ball.update(tick, balls);
+  	ball.update(now, tick, balls);
 
   	camBoundary.min.x = Math.min(ball.mesh.position.x, camBoundary.min.x);
   	camBoundary.min.y = Math.min(ball.mesh.position.z, camBoundary.min.y);
@@ -88,8 +88,6 @@ var render = function () {
 
   camera.position.x = (ballCentre.x);
   camera.position.z = (ballCentre.y);
-
-  // camera.lookAt(ballCentre);
 
   snow.update(balls);
 

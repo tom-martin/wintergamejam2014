@@ -2,6 +2,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     var self = this;
 
+    var juiceSeed = Math.random()*10000;
+
     var Radius = 0.5;
     var TurnSpeed = 10.0;
     var RotationSpeed = 75.0;
@@ -19,9 +21,12 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     self.yRotation = 0;
     self.xRotation = 0;
 
+    self.growing = false;
+    self.shrinking = false;
+
     scene.add(self.mesh);
 
-    self.update = function(tick, otherBalls) {
+    self.update = function(now, tick, otherBalls) {
 
         applyCollision(otherBalls, tick);
 
@@ -31,7 +36,9 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
         applyRotation(tick);
 
-        applyScale();
+        applyScale(now);
+
+        clearFlags();
     };
 
     function createMesh(startPosition) {
@@ -130,17 +137,34 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
     }
 
-    function applyScale() {
-        self.mesh.scale.set(self.scale, self.scale, self.scale);
+    function applyScale(now) {
+        var growth = 0;
+        if(self.growing) {
+            growth = Util.juiceBounce(now, juiceSeed, 750, (self.scale/2));
+        }
+        var newScale = self.scale + growth;
+
+        self.mesh.scale.set(newScale, newScale, newScale);
     }
 
     self.grow = function(tick) {
+        self.growing = true;
+        self.shrinking = false;
+
         self.scale += (growRate * tick);
     };
 
     self.shrink = function(tick) {
+        self.growing = false;
+        self.shrinking = true;
+
         self.scale -= (shrinkRate * tick);
     };
+
+    function clearFlags() {
+        self.growing = false;
+        self.shrinking = false;
+    }
 
     return self;
 }
