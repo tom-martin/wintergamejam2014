@@ -28,6 +28,9 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     scene.add(self.mesh);
 
+    var white = new THREE.Color(0xffffff);
+
+
     self.update = function(now, tick, otherBalls) {
 
         applyCollision(otherBalls, tick);
@@ -40,13 +43,20 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
         applyScale(now);
 
+        if(self.shrinking) {
+            var colorBounce = Util.juiceBounce(now, juiceSeed, 750, (self.scale/2));
+            self.sphereMaterial.color = new THREE.Color(1, colorBounce, colorBounce);
+        } else {
+            self.sphereMaterial.color = white;
+        }
+
         clearFlags();
     };
 
     function createMesh(startPosition) {
         var sphereGeometry = new THREE.SphereGeometry( Radius, 8, 8 );
-        var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
-        var mesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
+        self.sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
+        var mesh = new THREE.Mesh( sphereGeometry, self.sphereMaterial );
         mesh.position.x += startPosition.x;
         mesh.position.y += startPosition.y;
         mesh.position.z += startPosition.z;
