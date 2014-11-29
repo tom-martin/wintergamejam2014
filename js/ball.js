@@ -8,6 +8,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var growRate = 0.5;
     var shrinkRate = 0.6;
 
+    var scale = 1.0;
+
     self.direction = new THREE.Vector3(0, 0, 1).normalize();
     self.yAxis = new THREE.Vector3(0, 1, 0).normalize();
     self.xAxis = new THREE.Vector3(1, 0, 0).normalize();
@@ -28,6 +30,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         applyMovement(tick);
 
         applyRotation(tick);
+
+        applyScale();
     };
 
     function createMesh(startPosition) {
@@ -118,16 +122,20 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
     }
 
+    function applyScale() {
+        self.mesh.scale.set(scale, scale, scale);
+    }
+
     self.grow = function(tick) {
-        self.mesh.scale.x += (growRate * tick);
-        self.mesh.scale.y += (growRate * tick);
-        self.mesh.scale.z += (growRate * tick);
+        scale += (growRate * tick);
+        scale += (growRate * tick);
+        scale += (growRate * tick);
     };
 
     self.shrink = function(tick) {
-        self.mesh.scale.x -= (shrinkRate * tick);
-        self.mesh.scale.y -= (shrinkRate * tick);
-        self.mesh.scale.z -= (shrinkRate * tick);
+        scale -= (shrinkRate * tick);
+        scale -= (shrinkRate * tick);
+        scale -= (shrinkRate * tick);
     };
 
     return self;
