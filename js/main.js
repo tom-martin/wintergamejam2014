@@ -7,6 +7,16 @@ var renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
+var stats = new Stats();
+stats.setMode(1); // 0: fps, 1: ms
+
+// align top-left
+stats.domElement.style.position = 'absolute';
+stats.domElement.style.left = '0px';
+stats.domElement.style.top = '0px';
+
+document.body.appendChild( stats.domElement );
+
 var light = new THREE.AmbientLight( 0x606060 ); // soft white light
 scene.add( light );
 var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9);
@@ -23,17 +33,21 @@ camera.lookAt(new THREE.Vector3(0, 0, 0.1));
 
 
 var render = function () {
+  stats.begin();
+  
   var now = Date.now();
   var tick = Math.min(0.1, (now - lastFrameTime) / 1000);
   lastFrameTime = now;
-  
-  requestAnimationFrame( render );
 
   ball.update(tick, input);
 
   snow.update(ball.mesh.position, 2.0);
 
   renderer.render(scene, camera);
+
+  requestAnimationFrame( render );
+
+  stats.end();
 };
 
 render();
