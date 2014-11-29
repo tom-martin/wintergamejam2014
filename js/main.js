@@ -32,7 +32,7 @@ var boundary = new THREE.Box2(new THREE.Vector2(-150, -100), new THREE.Vector2(1
 var balls = [new Ball(scene, new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)),
 			 new Ball(scene, new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68))];
 
-var geometry = new THREE.PlaneBufferGeometry( 200, 200, 2 );
+var geometry = new THREE.PlaneBufferGeometry( 400, 300, 2 );
 var floorTexture = THREE.ImageUtils.loadTexture('images/grass.png');
 floorTexture.minFilter = THREE.NearestFilter;
 floorTexture.magFilter = THREE.NearestFilter;
