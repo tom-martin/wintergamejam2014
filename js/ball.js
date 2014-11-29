@@ -76,20 +76,25 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         var position = new THREE.Vector2(self.mesh.position.x, self.mesh.position.z);
 
         if (!boundaryRectangle.containsPoint(position)) {
+            var newDirection = self.direction.clone();
             if (self.mesh.position.x > boundaryRectangle.max.x) {
                 self.mesh.position.x = boundaryRectangle.max.x - 1;
+                newDirection.x *= -1;
             }
             if (self.mesh.position.x < boundaryRectangle.min.x) {
                 self.mesh.position.x = boundaryRectangle.min.x + 1;
+                newDirection.x *= -1;
             }
             if (self.mesh.position.z > boundaryRectangle.max.y) {
                 self.mesh.position.z = boundaryRectangle.max.y - 1;
+                newDirection.z *= -1;
             }
             if (self.mesh.position.z < boundaryRectangle.min.y) {
                 self.mesh.position.z = boundaryRectangle.min.y + 1;
+                newDirection.z *= -1;
             }
 
-            self.yRotation += Math.PI;
+            self.yRotation = Math.atan2(-newDirection.z, newDirection.x) + (0.5 * Math.PI);
         } else if (collidesWithAnyBall(otherBalls)) {
             self.yRotation += Math.PI;
         }
