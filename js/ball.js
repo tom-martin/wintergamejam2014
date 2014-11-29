@@ -2,6 +2,7 @@ function Ball(scene, startPosition, boundaryRectangle) {
 
     var self = this;
 
+    var Radius = 0.5;
     var TurnSpeed = 10.0;
     var RotationSpeed = 75.0;
     var growRate = 0.5;
@@ -18,9 +19,9 @@ function Ball(scene, startPosition, boundaryRectangle) {
 
     scene.add(self.mesh);
 
-    self.update = function(tick, input) {
+    self.update = function(tick, input, otherBalls) {
 
-        applyCollision();
+        applyCollision(otherBalls);
 
         applyTurn(tick, input);
 
@@ -30,7 +31,7 @@ function Ball(scene, startPosition, boundaryRectangle) {
     };
 
     function createMesh(startPosition) {
-        var sphereGeometry = new THREE.SphereGeometry( 0.5, 8, 8 );
+        var sphereGeometry = new THREE.SphereGeometry( Radius, 8, 8 );
         var sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
         var mesh = new THREE.Mesh( sphereGeometry, sphereMaterial );
         mesh.position.x += startPosition.x;
@@ -71,7 +72,7 @@ function Ball(scene, startPosition, boundaryRectangle) {
         self.direction.applyAxisAngle(self.yAxis, self.yRotation);
     }
 
-    function applyCollision() {
+    function applyCollision(otherBalls) {
         var position = new THREE.Vector2(self.mesh.position.x, self.mesh.position.z);
 
         if (!boundaryRectangle.containsPoint(position)) {
@@ -89,7 +90,19 @@ function Ball(scene, startPosition, boundaryRectangle) {
             }
 
             self.yRotation += Math.PI;
+        } else if (collidesWithAnyBall(otherBalls)) {
+            self.yRotation += Math.PI;
         }
+    }
+
+    function collidesWithAnyBall(otherBalls) {
+        return !otherBalls.every(function(ball) {
+            return !collidesWithBall(ball);
+        });
+    }
+
+    function collidesWithBall(otherBall) {
+        return (self.mesh.position.distanceTo(otherBall.mesh.position) < ((otherBall.mesh.scale.x * Radius) + (self.mesh.scale.x * Radius)));
     }
 
     function applyRotation(tick) {

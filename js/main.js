@@ -60,10 +60,10 @@ var render = function () {
   var tick = Math.min(0.1, (now - lastFrameTime) / 1000);
   lastFrameTime = now;
 
-  ball1.update(tick, input1);
-  ball2.update(tick, input2);
-  ball3.update(tick, input3);
-  ball4.update(tick, input4);
+  ball1.update(tick, input1, [ball2, ball3, ball4]);
+  ball2.update(tick, input2, [ball1, ball3, ball4]);
+  ball3.update(tick, input3, [ball1, ball2, ball4]);
+  ball4.update(tick, input4, [ball1, ball2, ball3]);
 
   camBoundary.min.x = Math.min(ball1.mesh.position.x, ball2.mesh.position.x, ball3.mesh.position.x, ball4.mesh.position.x);
   camBoundary.min.y = Math.min(ball1.mesh.position.z, ball2.mesh.position.z, ball3.mesh.position.z, ball4.mesh.position.z);
