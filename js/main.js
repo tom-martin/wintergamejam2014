@@ -11,22 +11,24 @@ var directionalLight = new THREE.DirectionalLight( 0xffffff, 0.9);
 directionalLight.position.set( -1, 1, 0 );
 scene.add( directionalLight );
 
-var geometry = new THREE.BoxGeometry( 1, 1, 1 );
-var material = new THREE.MeshLambertMaterial( { color: 0xffffff } );
-var cube = new THREE.Mesh( geometry, material );
-// scene.add( cube );
-
 var snow = new Snow(scene);
 
-camera.position.y = 5;
+camera.position.y = 15;
+
+var sphereGeometry = new THREE.SphereGeometry( 5, 32, 32 );
+var sphereMaterial = new THREE.MeshBasicMaterial( {color: 0xffffff} );
+var sphere = new THREE.Mesh( sphereGeometry, sphereMaterial );
+
+//scene.add( sphere );
+
+
 
 var render = function () {
   requestAnimationFrame( render );
 
   camera.lookAt(snow.mesh.position);
-
-  cube.rotation.x += 0.1;
-  cube.rotation.y += 0.1;
+  sphere.rotation.x += 0.1;
+  sphere.rotation.y += 0.1;
 
   renderer.render(scene, camera);
 };
