@@ -41,6 +41,9 @@ plane.position.y = -0.5;
 plane.rotation.set(-Math.PI/2, 0, 0);
 scene.add( plane );
 
+var weather = new Weather();
+weather.startSnowing(scene);
+
 var x = boundary.min.x-15;
 while(x < boundary.max.x+15) {
   var building = new Building(scene, x, boundary.min.y-20);
@@ -109,6 +112,8 @@ var render = function () {
 
   camBoundary.min.set(10000, 10000);
   camBoundary.max.set(-10000, -10000);
+
+  weather.update();
 
   if (Game.inProgress) {
     for(var ballI in balls) {
