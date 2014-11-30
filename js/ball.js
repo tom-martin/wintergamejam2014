@@ -10,6 +10,9 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var growRate = 0.5;
     var shrinkRate = 1.0;
 
+    self.isWinner = false;
+    self.isLoser = false;
+
     var deathSounds = [new Audio("../audio/death1.ogg"), new Audio("../audio/death2.ogg")];
     var collideSounds = [new Audio("../audio/collide1.ogg"), new Audio("../audio/collide2.ogg"), new Audio("../audio/collide3.ogg")];
 
@@ -19,6 +22,11 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     var MaxScale = 30;
     var MinScale = 1;
+
+    var winnerBounceValue = 0;
+    var WinnerBounceHeight = 10;
+    var WinnerBounceSpeed = 5;
+    var LoserFadeSpeed = 2.0;
 
     self.previousPosition = startPosition.clone();
 
@@ -44,6 +52,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     self.kill = function() {
         self.isAlive = false;
+        self.isLoser = true;
         self.sphereMaterial.color = red;
         self.mesh.material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
         Util.playRandomSound(deathSounds, 1.0);
@@ -71,13 +80,23 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
             self.grow(tick * 5);
         }
 
-        applyScale(now);
+        applyScale();
 
         if(showShrinking(now)) {
             var colorBounce = Util.juiceBounce(now, juiceSeed, 1000, 1);
             self.sphereMaterial.color = new THREE.Color(1, colorBounce, colorBounce);
         } else {
             self.sphereMaterial.color = white;
+        }
+    };
+
+    self.updatePostGame = function(tick) {
+        if (self.isWinner) {
+            winnerBounceValue += (tick * WinnerBounceSpeed);
+            self.mesh.position.y = Math.abs(WinnerBounceHeight * Math.sin(winnerBounceValue));
+        } else if (self.isLoser) {
+            shrinkToNothing(tick * LoserFadeSpeed);
+            applyScale();
         }
     };
 
@@ -158,6 +177,9 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
                 if (collidesWithBall(otherBall)) {
                     if (self.scale > (otherBall.scale * KillFactor)) {
                         otherBall.kill();
+                        self.isWinner = true;
+                        self.shrinking = false;
+                        otherBall.shrinking = true;
                     } else {
                         if (otherBall.scale > self.scale) {
                             self.shrink(tick * SnowSwapFactor);
@@ -195,7 +217,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
     }
 
-    function applyScale(now) {
+    function applyScale() {
         self.mesh.scale.set(self.scale, self.scale, self.scale);
     }
 
@@ -210,6 +232,10 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     self.shrink = function(tick) {
         self.scale = Math.max(MinScale, self.scale - (shrinkRate * tick));
     };
+
+    function shrinkToNothing(tick) {
+        self.scale = Math.max(0, self.scale - (shrinkRate * tick));
+    }
 
     return self;
 }

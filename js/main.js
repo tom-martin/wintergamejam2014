@@ -124,7 +124,11 @@ var render = function () {
 
     snow.update(tick, balls);
   } else {
+    for(var ballI in balls) {
+      var ball = balls[ballI];
 
+      ball.updatePostGame(tick);
+    }
   }
 
   positionCamera();
