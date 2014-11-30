@@ -92,6 +92,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
     self.updatePostGame = function(tick) {
         if (self.isWinner) {
+            self.sphereMaterial.color = white;
             winnerBounceValue += (tick * WinnerBounceSpeed);
             self.mesh.position.y = Math.abs(WinnerBounceHeight * Math.sin(winnerBounceValue));
         } else if (self.isLoser) {
