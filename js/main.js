@@ -52,6 +52,10 @@ var ballCentre = new THREE.Vector2();
 
 var camBoundary = new THREE.Box2(new THREE.Vector2(-50, -50), new THREE.Vector2(50, 50));
 
+var music = new Audio("../audio/music.ogg");
+music.volume = 0.8;
+music.play();
+
 var render = function () {
   stats.begin();
 
