@@ -4,6 +4,9 @@
 // var input4 = new Input(80, 186, 76, 222);
 
 var PostGameSnowRate = 15.0;
+var CameraPostGameZoomOutRate = 20.0;
+var CameraMaxHeight = 100;
+var CameraMinHeight = 30;
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
@@ -125,6 +128,8 @@ var render = function () {
     }
 
     snow.update(tick, balls);
+
+    positionCamera();
   } else {
     for(var ballI in balls) {
       var ball = balls[ballI];
@@ -132,9 +137,11 @@ var render = function () {
       ball.updatePostGame(tick);
     }
     snow.update(tick * PostGameSnowRate, []);
+
+    zoomOutCamera(tick);
   }
 
-  positionCamera();
+
 
   renderer.render(scene, camera);
 
@@ -142,6 +149,10 @@ var render = function () {
 
   stats.end();
 };
+
+function zoomOutCamera(tick) {
+  camera.position.y = Math.min(CameraMaxHeight, camera.position.y + (tick * CameraPostGameZoomOutRate));
+}
 
 function positionCamera() {
   for(var ballI in balls) {
@@ -159,8 +170,8 @@ function positionCamera() {
   ballDiff.x -= camBoundary.min.x;
   ballDiff.z -= camBoundary.min.y;
 
-  camera.position.y = Math.max(30, Math.abs(ballDiff.length()));
-  camera.position.y = Math.min(100, camera.position.y);
+  camera.position.y = Math.max(CameraMinHeight, Math.abs(ballDiff.length()));
+  camera.position.y = Math.min(CameraMaxHeight, camera.position.y);
 
   camBoundary.center(ballCentre);
 
