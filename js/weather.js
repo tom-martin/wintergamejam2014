@@ -1,13 +1,8 @@
 function Weather(boundary) {
     var self = this;
 
-    var TO_RADIANS = Math.PI / 180;
-
-    var gravity = new THREE.Vector3(0,0,0);
     var velocity = -4;
     var drag = 1;
-
-    var mesh;
 
     function snowflake(x,y,z) {
         var geometry = new THREE.Geometry();
@@ -17,7 +12,7 @@ function Weather(boundary) {
         geometry.faces.push(new THREE.Face3(0,2,1));
 
         var material = new THREE.MeshBasicMaterial({color: 0xffffff});
-        mesh = new THREE.Mesh(geometry, material);
+        var mesh = new THREE.Mesh(geometry, material);
         mesh.position.x = x;
         mesh.position.y = y;
         mesh.position.z = z;
@@ -54,16 +49,21 @@ function Weather(boundary) {
 
     self.update = function(tick) {
         for(var i=0; i < 1000; i++) {
-            /* TODO: apply rotation, velocity, drag */
+            /* TODO: apply drag */
             var snowflake = snowflakes[i%snowflakes.length];
 
             snowflake.rotation.x += 0.01;
+            snowflake.rotation.y += 0.01;
             if (snowflake.position.y < 0) {
                 recycle(snowflake);
             } else {
-                snowflake.position.y += velocity * tick;
+                snowflake.position.y += applyDrag(velocity) * tick;
             }
         }
+    }
+
+    function applyDrag(velocity) {
+        return velocity - rand(0, drag);
     }
 
     function rand(min, max) {
