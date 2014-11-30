@@ -113,6 +113,10 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
         }
     };
 
+    self.actualRadius = function() {
+        return self.scale * Radius;
+    };
+
     function createMesh(startPosition) {
         var sphereGeometry = new THREE.SphereGeometry( Radius, 8, 8 );
         self.sphereMaterial = new THREE.MeshLambertMaterial( {color: 0xffffff} );
@@ -157,7 +161,7 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
     }
 
     function applyCollision(otherBalls, ballOffset, tick) {
-        var realRadius = self.scale * Radius;
+        var realRadius = self.actualRadius();
         var ballAsBox = new THREE.Box2(
             new THREE.Vector2(self.mesh.position.x - realRadius, self.mesh.position.z - realRadius),
             new THREE.Vector2(self.mesh.position.x + realRadius, self.mesh.position.z + realRadius)
@@ -188,6 +192,14 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
         applyBallCollision(otherBalls, ballOffset, tick);
     }
 
+    function isXCollision(otherBall) {
+        return Math.abs(self.mesh.position.x - otherBall.mesh.position.x) > ((self.actualRadius() + otherBall.actualRadius()) / 2.0);
+    }
+
+    function isYCollision(otherBall) {
+        return Math.abs(self.mesh.position.z - otherBall.mesh.position.z) > ((self.actualRadius() + otherBall.actualRadius()) / 2.0);
+    }
+
     function applyBallCollision(otherBalls, ballOffset, tick) {
         for(var i = ballOffset; i < otherBalls.length; i++) {
             var otherBall = otherBalls[i];
@@ -213,30 +225,24 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
                 }
             }
         }
-        
-            
     }
 
     function moveAwayFromOtherBall(otherBall, tick) {
-        var directionVector = new THREE.Vector3(0,0,0)
-            .subVectors(self.mesh.position, otherBall.mesh.position)
-            .normalize()
+        if (isXCollision(otherBall)) {
+            self.direction.x *= -1;
+            otherBall.direction.x *= -1;
+            self.mesh.position.x += (self.direction.x * self.speed * tick);
+            otherBall.mesh.position.x += (otherBall.direction.x * otherBall.speed * tick);
+        }
+        if (isYCollision(otherBall)) {
+            self.direction.z *= -1;
+            otherBall.direction.z *= -1;
+            self.mesh.position.z += (self.direction.z * self.speed * tick);
+            otherBall.mesh.position.z += (otherBall.direction.z * otherBall.speed * tick);
 
-        directionVector.applyAxisAngle(self.yAxis, -Math.PI/2);
-
-        var newDirection = self.direction.clone();
-        newDirection.reflect(directionVector);
-        self.yRotation -= self.direction.angleTo(newDirection);
-
-        directionVector = new THREE.Vector3(0,0,0)
-            .subVectors(otherBall.mesh.position, self.mesh.position)
-            .normalize();
-
-        directionVector.applyAxisAngle(self.yAxis, -Math.PI/2);
-
-        var newDirection = otherBall.direction.clone();
-        newDirection.reflect(directionVector);
-        otherBall.yRotation -= otherBall.direction.angleTo(newDirection);
+        }
+        self.yRotation = Math.atan2(-self.direction.z, self.direction.x) + (0.5 * Math.PI);
+        otherBall.yRotation = Math.atan2(-otherBall.direction.z, otherBall.direction.x) + (0.5 * Math.PI);
     }
 
     function collidesWithBall(otherBall) {
