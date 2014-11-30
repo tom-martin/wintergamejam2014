@@ -1,4 +1,4 @@
-function Ball(startPosition, boundaryRectangle, input) {
+function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
 
     var self = this;
 
@@ -41,6 +41,12 @@ function Ball(startPosition, boundaryRectangle, input) {
     self.speed = 50.0;
     self.mesh = createMesh(startPosition);
 
+    var geometry = new THREE.PlaneBufferGeometry( 2, 2, 1);
+    var material = new THREE.MeshLambertMaterial( {map: arrowTexture, transparent: true, opacity: 0.9} );
+    var arrow = new THREE.Mesh( geometry, material );
+    arrow.rotation.set(-Math.PI/2, 0, 0);
+    scene.add(arrow);
+
     self.yRotation = 0;
     self.xRotation = 0;
 
@@ -54,7 +60,7 @@ function Ball(startPosition, boundaryRectangle, input) {
         self.isAlive = false;
         self.isLoser = true;
         self.sphereMaterial.color = red;
-        self.mesh.material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
+        self.mesh.material = new THREE.MeshLambertMaterial( {color: 0xFF0000} );
         Util.playRandomSound(deathSounds, 1.0);
         Game.inProgress = false;
     };
@@ -88,6 +94,13 @@ function Ball(startPosition, boundaryRectangle, input) {
         } else {
             self.sphereMaterial.color = white;
         }
+
+        arrow.position.x = self.mesh.position.x;
+        arrow.position.y = self.mesh.position.y+2;
+
+        var arrowScale = Math.min(5, self.scale/2);
+        arrow.position.z = self.mesh.position.z+(self.scale/2 + arrowScale);
+        arrow.scale.set(arrowScale, arrowScale, arrowScale);
     };
 
     self.updatePostGame = function(tick) {
@@ -150,8 +163,6 @@ function Ball(startPosition, boundaryRectangle, input) {
             new THREE.Vector2(self.mesh.position.x - realRadius, self.mesh.position.z - realRadius),
             new THREE.Vector2(self.mesh.position.x + realRadius, self.mesh.position.z + realRadius)
         );
-
-        console.log(ballAsBox);
 
         if (!boundaryRectangle.containsBox(ballAsBox)) {
             var newDirection = self.direction.clone();

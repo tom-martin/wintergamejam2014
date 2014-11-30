@@ -34,6 +34,14 @@ scene.add( directionalLight );
 var snow = new Snow(scene);
 var boundary = new THREE.Box2(new THREE.Vector2(-150, -100), new THREE.Vector2(150, 100));
 
+var arrow1Texture = THREE.ImageUtils.loadTexture('images/arrow1.png');
+arrow1Texture.minFilter = THREE.NearestFilter;
+arrow1Texture.magFilter = THREE.NearestFilter;
+
+var arrow2Texture = THREE.ImageUtils.loadTexture('images/arrow2.png');
+arrow2Texture.minFilter = THREE.NearestFilter;
+arrow2Texture.magFilter = THREE.NearestFilter;
+
 var balls = [];
 
 var geometry = new THREE.PlaneBufferGeometry( 512, 512, 2 );
@@ -109,8 +117,8 @@ function startNewGame() {
   }
 
   Game.inProgress = true;
-  balls = [new Ball(new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)),
-    new Ball(new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68))];
+  balls = [new Ball(new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39), arrow1Texture),
+    new Ball(new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68), arrow2Texture)];
 
   for (ballIndex in balls) {
     scene.add(balls[ballIndex].mesh);
