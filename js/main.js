@@ -42,6 +42,30 @@ plane.position.y = -0.5;
 plane.rotation.set(-Math.PI/2, 0, 0);
 scene.add( plane );
 
+var x = boundary.min.x-15;
+while(x < boundary.max.x+15) {
+  var building = new Building(scene, x, boundary.min.y-20);
+  x += (building.floorSize)+1;
+}
+
+x = boundary.min.x-15;
+while(x < boundary.max.x+15) {
+  var building = new Building(scene, x, boundary.max.y-10);
+  x += (building.floorSize)+1;
+}
+
+var z = boundary.min.y-15;
+while(z < boundary.max.y+15) {
+  var building = new Building(scene, boundary.min.x-25, z);
+  z += (building.floorSize)+1;
+}
+
+z = boundary.min.y-15;
+while(z < boundary.max.y+15) {
+  var building = new Building(scene, boundary.max.x-15, z);
+  z += (building.floorSize)+1;
+}
+
 camera.position.y = 100;
 
 var lastFrameTime = Date.now();
