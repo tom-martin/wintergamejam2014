@@ -124,7 +124,7 @@ var render = function () {
     for(var ballI in balls) {
       var ball = balls[ballI];
 
-      ball.update(now, tick, balls);
+      ball.update(now, tick, balls, Math.floor(ballI)+1);
     }
 
     snow.update(tick, balls);

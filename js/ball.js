@@ -17,8 +17,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var collideSounds = [new Audio("../audio/collide1.ogg"), new Audio("../audio/collide2.ogg"), new Audio("../audio/collide3.ogg")];
 
     var KillFactor = 2.0;
-    var BounceFactor = 50.0;
-    var SnowSwapFactor = 50.0;
+    var BounceFactor = 150.0;
+    var SnowSwapFactor = 25.0;
 
     var MaxScale = 30;
     var MinScale = 1;
@@ -59,7 +59,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         Game.inProgress = false;
     };
 
-    self.update = function(now, tick, otherBalls) {
+    self.update = function(now, tick, otherBalls, ballOffset) {
         if(self.shrinking && !self.previousShrinking) {
             self.shrinkingTime = now;
             self.previousShrinking = self.shrinking;
@@ -68,7 +68,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
             self.previousShrinking = false;
         }
         if (self.isAlive) {
-            applyCollision(otherBalls, tick);
+            applyCollision(otherBalls, ballOffset, tick);
 
             applyTurn(tick, input);
 
@@ -144,7 +144,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         self.direction.applyAxisAngle(self.yAxis, self.yRotation);
     }
 
-    function applyCollision(otherBalls, tick) {
+    function applyCollision(otherBalls, ballOffset, tick) {
         var position = new THREE.Vector2(self.mesh.position.x, self.mesh.position.z);
 
         if (!boundaryRectangle.containsPoint(position)) {
@@ -169,19 +169,21 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
             self.yRotation = Math.atan2(-newDirection.z, newDirection.x) + (0.5 * Math.PI);
         }
 
-        applyBallCollision(otherBalls, tick);
+        applyBallCollision(otherBalls, ballOffset, tick);
     }
 
-    function applyBallCollision(otherBalls, tick) {
-        otherBalls.forEach(function(otherBall) {
-            if (otherBall != self && otherBall.isAlive) {
+    function applyBallCollision(otherBalls, ballOffset, tick) {
+        for(var i = ballOffset; i < otherBalls.length; i++) {
+            var otherBall = otherBalls[i];
+            if (otherBall.isAlive) {
                 if (collidesWithBall(otherBall)) {
                     if (self.scale > (otherBall.scale * KillFactor)) {
                         otherBall.kill();
                         self.isWinner = true;
-                        self.shrinking = false;
-                        otherBall.shrinking = true;
-                    } else {
+                    } else if (otherBall.scale > (self.scale * KillFactor)) {
+                        self.kill();
+                        otherBall.isWinner = true;
+                    } else { 
                         if (otherBall.scale > self.scale) {
                             self.shrink(tick * SnowSwapFactor);
                             otherBall.grow(tick * SnowSwapFactor);
@@ -194,7 +196,9 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
                     }
                 }
             }
-        });
+        }
+        
+            
     }
 
     function moveAwayFromOtherBall(otherBall, tick) {
@@ -204,6 +208,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
             .multiplyScalar(BounceFactor * tick);
 
         self.mesh.position.add(directionVector)
+        self.yRotation = Math.atan2(-directionVector.x, directionVector.z) + (0.5 * Math.PI);
+        otherBall.yRotation = -self.yRotation;
     }
 
     function collidesWithBall(otherBall) {
