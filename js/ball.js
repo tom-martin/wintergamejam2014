@@ -43,9 +43,8 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
 
     var geometry = new THREE.PlaneBufferGeometry( 2, 2, 1);
     var material = new THREE.MeshLambertMaterial( {map: arrowTexture, transparent: true, opacity: 0.9} );
-    var arrow = new THREE.Mesh( geometry, material );
-    arrow.rotation.set(-Math.PI/2, 0, 0);
-    scene.add(arrow);
+    self.arrow = new THREE.Mesh( geometry, material );
+    self.arrow.rotation.set(-Math.PI/2, 0, 0);
 
     self.yRotation = 0;
     self.xRotation = 0;
@@ -95,12 +94,12 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
             self.sphereMaterial.color = white;
         }
 
-        arrow.position.x = self.mesh.position.x;
-        arrow.position.y = self.mesh.position.y+2;
+        self.arrow.position.x = self.mesh.position.x;
+        self.arrow.position.y = self.mesh.position.y+2;
 
         var arrowScale = Math.min(5, self.scale/2);
-        arrow.position.z = self.mesh.position.z+(self.scale/2 + arrowScale)+1;
-        arrow.scale.set(arrowScale, arrowScale, arrowScale);
+        self.arrow.position.z = self.mesh.position.z+(self.scale/2 + arrowScale)+1;
+        self.arrow.scale.set(arrowScale, arrowScale, arrowScale);
     };
 
     self.updatePostGame = function(tick) {

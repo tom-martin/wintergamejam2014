@@ -114,6 +114,7 @@ function startNewGame() {
 
   for (ballIndex in balls) {
     scene.remove(balls[ballIndex].mesh);
+    scene.remove(balls[ballIndex].arrow);
   }
 
   Game.inProgress = true;
@@ -122,6 +123,7 @@ function startNewGame() {
 
   for (ballIndex in balls) {
     scene.add(balls[ballIndex].mesh);
+    scene.add(balls[ballIndex].arrow);
   }
 }
 
