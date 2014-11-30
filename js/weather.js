@@ -4,7 +4,7 @@ function Weather() {
     var TO_RADIANS = Math.PI / 180;
 
     var gravity = new THREE.Vector3(0,0,0);
-    var velocity = new THREE.Vector3(0,-8,0);
+    var velocity = -8
     var drag = 1;
 
     var mesh;
@@ -38,10 +38,23 @@ function Weather() {
         return Math.random() * 400 - 300;
     }
 
+    function recycle(snowflake) {
+        snowflake.position.x = randomPoint();
+        snowflake.position.y = randomPoint();
+        snowflake.position.z = randomPoint();
+    }
+
     self.update = function() {
         for (var i in snowflakes) {
             /* TODO: apply rotation, velocity, drag */
-            snowflakes[i].rotation.x += 0.01;
+            var snowflake = snowflakes[i];
+
+            snowflake.rotation.x += 0.01;
+            if (snowflake.position.y < 0) {
+                recycle(snowflake);
+            } else {
+                snowflake.position.y += velocity
+            }
         }
     }
 
