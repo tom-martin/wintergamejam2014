@@ -7,8 +7,8 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
     var Radius = 0.5;
     var TurnSpeed = 15.0;
     var RotationSpeed = 75.0;
-    var growRate = 0.6;
-    var shrinkRate = 0.9;
+    var growRate = 0.5;
+    var shrinkRate = 1.0;
 
     self.isWinner = false;
     self.isLoser = false;

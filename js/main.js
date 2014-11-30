@@ -23,7 +23,7 @@ stats.domElement.style.position = 'absolute';
 stats.domElement.style.left = '0px';
 stats.domElement.style.top = '0px';
 
-document.body.appendChild( stats.domElement );
+// document.body.appendChild( stats.domElement );
 
 var light = new THREE.AmbientLight( 0x606060 ); // soft white light
 scene.add( light );
