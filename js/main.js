@@ -89,7 +89,8 @@ music.play();
 
 document.addEventListener("keydown", function(e) {
   if ((!Game.inProgress) && e.keyCode == 32) {
-    startNewGame()
+    startNewGame();
+    $("#game-start").modal('hide');
   }
 });
 
@@ -139,6 +140,7 @@ var render = function () {
     snow.update(tick * PostGameSnowRate, []);
 
     zoomOutCamera(tick);
+    $("#game-start").modal('show');
   }
 
 

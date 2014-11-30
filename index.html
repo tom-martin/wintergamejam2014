@@ -1,12 +1,30 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
   <head>
     <title>Game</title>
     <style>
       body { margin: 0; }
       canvas { width: 100%; height: 100% }
     </style>
+    <script src="js/jquery-1.11.1.min.js"></script>
+    <link href="css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="js/bootstrap.min.js"></script>
   </head>
   <body>
+    <div class="modal fade" id="game-start" tabindex="-1">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <div class="modal-title">The Game</div>
+          </div>
+          <div class="modal-body">
+            <button type="button" class="btn btn-primary btn-lg">Start</button>
+            <div><small>Press spacebar</small></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="js/three.min.js"></script>
     <script src="js/stats.min.js"></script>
     <script src="js/util.js"></script>
@@ -18,4 +36,7 @@
     <script src="js/weather.js"></script>
     <script src="js/main.js"></script>
   </body>
+  <script type="text/javascript">
+    $('#game-start').modal();
+  </script>
 </html>
