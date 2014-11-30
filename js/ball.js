@@ -13,6 +13,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var deathSounds = [new Audio("../audio/death1.ogg"), new Audio("../audio/death2.ogg")];
 
     var KillFactor = 2.0;
+    var BounceFactor = 50.0;
+    var SnowSwapFactor = 50.0;
 
     var MaxScale = 30;
     var MinScale = 1;
@@ -156,14 +158,28 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
                 if (collidesWithBall(otherBall)) {
                     if (self.scale > (otherBall.scale * KillFactor)) {
                         otherBall.kill();
-                    } else if (otherBall.scale > self.scale) {
-                        self.shrink(tick * 5);
-                    } else if (otherBall.scale < self.scale) {
-                        self.grow(tick * 5);
+                    } else {
+                        if (otherBall.scale > self.scale) {
+                            self.shrink(tick * SnowSwapFactor);
+                            otherBall.grow(tick * SnowSwapFactor);
+                        } else if (otherBall.scale < self.scale) {
+                            self.grow(tick * SnowSwapFactor);
+                            otherBall.shrink(tick * SnowSwapFactor);
+                        }
+                        moveAwayFromOtherBall(otherBall, tick);
                     }
                 }
             }
         });
+    }
+
+    function moveAwayFromOtherBall(otherBall, tick) {
+        var directionVector = new THREE.Vector3(0,0,0)
+            .subVectors(self.mesh.position, otherBall.mesh.position)
+            .normalize()
+            .multiplyScalar(BounceFactor * tick);
+
+        self.mesh.position.add(directionVector)
     }
 
     function collidesWithBall(otherBall) {
