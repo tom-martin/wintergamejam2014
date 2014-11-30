@@ -3,6 +3,8 @@
 // var input3 = new Input(89, 72, 71, 74);
 // var input4 = new Input(80, 186, 76, 222);
 
+var PostGameSnowRate = 15.0;
+
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 75, window.innerWidth/window.innerHeight, 0.1, 1000 );
 
@@ -129,6 +131,7 @@ var render = function () {
 
       ball.updatePostGame(tick);
     }
+    snow.update(tick * PostGameSnowRate, []);
   }
 
   positionCamera();
