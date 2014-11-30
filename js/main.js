@@ -100,8 +100,8 @@ function startNewGame() {
   }
 
   Game.inProgress = true;
-  balls = [new Ball(scene, new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)),
-    new Ball(scene, new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68))];
+  balls = [new Ball(new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)),
+    new Ball(new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68))];
 
   for (ballIndex in balls) {
     scene.add(balls[ballIndex].mesh);

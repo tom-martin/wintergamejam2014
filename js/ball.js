@@ -1,4 +1,4 @@
-function Ball(scene, startPosition, boundaryRectangle, input) {
+function Ball(startPosition, boundaryRectangle, input) {
 
     var self = this;
 
@@ -145,24 +145,30 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     }
 
     function applyCollision(otherBalls, ballOffset, tick) {
-        var position = new THREE.Vector2(self.mesh.position.x, self.mesh.position.z);
+        var realRadius = self.scale * Radius;
+        var ballAsBox = new THREE.Box2(
+            new THREE.Vector2(self.mesh.position.x - realRadius, self.mesh.position.z - realRadius),
+            new THREE.Vector2(self.mesh.position.x + realRadius, self.mesh.position.z + realRadius)
+        );
 
-        if (!boundaryRectangle.containsPoint(position)) {
+        console.log(ballAsBox);
+
+        if (!boundaryRectangle.containsBox(ballAsBox)) {
             var newDirection = self.direction.clone();
-            if (self.mesh.position.x > boundaryRectangle.max.x) {
-                self.mesh.position.x = boundaryRectangle.max.x - 1;
+            if (ballAsBox.max.x > boundaryRectangle.max.x) {
+                self.mesh.position.x = (boundaryRectangle.max.x - 1) - realRadius;
                 newDirection.x *= -1;
             }
-            if (self.mesh.position.x < boundaryRectangle.min.x) {
-                self.mesh.position.x = boundaryRectangle.min.x + 1;
+            if (ballAsBox.min.x < boundaryRectangle.min.x) {
+                self.mesh.position.x = (boundaryRectangle.min.x + 1 + realRadius);
                 newDirection.x *= -1;
             }
-            if (self.mesh.position.z > boundaryRectangle.max.y) {
-                self.mesh.position.z = boundaryRectangle.max.y - 1;
+            if (ballAsBox.max.y > boundaryRectangle.max.y) {
+                self.mesh.position.z = (boundaryRectangle.max.y - 1) - realRadius;
                 newDirection.z *= -1;
             }
-            if (self.mesh.position.z < boundaryRectangle.min.y) {
-                self.mesh.position.z = boundaryRectangle.min.y + 1;
+            if (ballAsBox.min.y < boundaryRectangle.min.y) {
+                self.mesh.position.z = (boundaryRectangle.min.y) + 1 + realRadius;
                 newDirection.z *= -1;
             }
 
