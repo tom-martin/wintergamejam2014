@@ -74,7 +74,6 @@ var render = function () {
   	camBoundary.max.y = Math.max(ball.mesh.position.z, camBoundary.max.y);
   }
 
-
   snow.update(tick, balls);
 
   ballDiff.x = camBoundary.max.x;
@@ -83,6 +82,7 @@ var render = function () {
   ballDiff.z -= camBoundary.min.y;
 
   camera.position.y = Math.max(30, Math.abs(ballDiff.length()));
+  camera.position.y = Math.min(100, camera.position.y);
 
   camBoundary.center(ballCentre);
 

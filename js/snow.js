@@ -146,17 +146,27 @@ function Snow(scene) {
                             diff.sub(ball.previousPosition)
                             dist = Math.abs(diff.lengthSq());
 
-                            if (dist > ballWidth*ballWidth)
+                            if (dist > ballWidth*ballWidth) {
+                                shrinkFound = true;
                                 ball.shrink(tick);
+                            }
                         }
                     }
                 }
             }
+
+            var newBallWidth = getBallWidth(ball);
+            if(newBallWidth < ballWidth) {
+                ball.shrinking = true;
+            } else {
+                ball.shrinking = false;
+            }
+
         }
     }
 
     function getBallWidth(ball) {
-        var ballScale = ball.mesh.scale.x;
+        var ballScale = ball.scale;
         return (ballScale * ball.mesh.geometry.boundingSphere.radius)
     }
 }

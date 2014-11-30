@@ -32,6 +32,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     self.xRotation = 0;
 
     self.shrinking = false;
+    self.previousShrinking = false;
 
     scene.add(self.mesh);
 
@@ -45,6 +46,13 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     };
 
     self.update = function(now, tick, otherBalls) {
+        if(self.shrinking && !self.previousShrinking) {
+            self.shrinkingTime = now;
+            self.previousShrinking = self.shrinking;
+        } else {
+            self.shrinking = false;
+            self.previousShrinking = false;
+        }
         if (self.isAlive) {
             applyCollision(otherBalls, tick);
 
@@ -60,14 +68,12 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
 
         applyScale(now);
 
-        if(self.shrinking) {
-            var colorBounce = Util.juiceBounce(now, juiceSeed, 750, (self.scale/2));
+        if(showShrinking(now)) {
+            var colorBounce = Util.juiceBounce(now, juiceSeed, 1000, 1);
             self.sphereMaterial.color = new THREE.Color(1, colorBounce, colorBounce);
         } else {
             self.sphereMaterial.color = white;
         }
-
-        clearFlags();
     };
 
     function createMesh(startPosition) {
@@ -170,13 +176,11 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     }
 
     function applyScale(now) {
-        var growth = 0;
-        if(!self.shrinking) {
-            // growth = Util.juiceBounce(now, juiceSeed, 750, (self.scale/2));
-        }
-        var newScale = self.scale + growth;
+        self.mesh.scale.set(self.scale, self.scale, self.scale);
+    }
 
-        self.mesh.scale.set(newScale, newScale, newScale);
+    function showShrinking(now) {
+        return self.shrinking || now - self.shrinkingTime < 500;
     }
 
     self.grow = function(tick) {
@@ -184,14 +188,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     };
 
     self.shrink = function(tick) {
-        self.shrinking = true;
-
         self.scale = Math.max(MinScale, self.scale - (shrinkRate * tick));
     };
-
-    function clearFlags() {
-        self.shrinking = false;
-    }
 
     return self;
 }
