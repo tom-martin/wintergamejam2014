@@ -29,8 +29,7 @@ scene.add( directionalLight );
 var snow = new Snow(scene);
 var boundary = new THREE.Box2(new THREE.Vector2(-150, -100), new THREE.Vector2(150, 100));
 
-var balls = [new Ball(scene, new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)),
-			 new Ball(scene, new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68))];
+var balls = [];
 
 var geometry = new THREE.PlaneBufferGeometry( 512, 512, 2 );
 var floorTexture = THREE.ImageUtils.loadTexture('images/back.png');
@@ -80,6 +79,27 @@ var music = new Audio("../audio/music.ogg");
 music.volume = 0.8;
 music.play();
 
+document.addEventListener("keydown", function(e) {
+  if ((!Game.inProgress) && e.keyCode == 32) {
+    startNewGame()
+  }
+});
+
+function startNewGame() {
+
+  for (ballIndex in balls) {
+    scene.remove(balls[ballIndex].mesh);
+  }
+
+  Game.inProgress = true;
+  balls = [new Ball(scene, new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39)),
+    new Ball(scene, new THREE.Vector3(20, 0, 0), boundary, new Input(87, 83, 65, 68))];
+
+  for (ballIndex in balls) {
+    scene.add(balls[ballIndex].mesh);
+  }
+}
+
 var render = function () {
   stats.begin();
 
@@ -90,19 +110,37 @@ var render = function () {
   camBoundary.min.set(10000, 10000);
   camBoundary.max.set(-10000, -10000);
 
-  for(var ballI in balls) {
-  	var ball = balls[ballI];
+  if (Game.inProgress) {
+    for(var ballI in balls) {
+      var ball = balls[ballI];
 
-  	ball.update(now, tick, balls);
+      ball.update(now, tick, balls);
+    }
 
-  	camBoundary.min.x = Math.min(ball.mesh.position.x, camBoundary.min.x);
-  	camBoundary.min.y = Math.min(ball.mesh.position.z, camBoundary.min.y);
+    snow.update(tick, balls);
+  } else {
 
-  	camBoundary.max.x = Math.max(ball.mesh.position.x, camBoundary.max.x);
-  	camBoundary.max.y = Math.max(ball.mesh.position.z, camBoundary.max.y);
   }
 
-  snow.update(tick, balls);
+  positionCamera();
+
+  renderer.render(scene, camera);
+
+  requestAnimationFrame( render );
+
+  stats.end();
+};
+
+function positionCamera() {
+  for(var ballI in balls) {
+    var ball = balls[ballI];
+
+    camBoundary.min.x = Math.min(ball.mesh.position.x, camBoundary.min.x);
+    camBoundary.min.y = Math.min(ball.mesh.position.z, camBoundary.min.y);
+
+    camBoundary.max.x = Math.max(ball.mesh.position.x, camBoundary.max.x);
+    camBoundary.max.y = Math.max(ball.mesh.position.z, camBoundary.max.y);
+  }
 
   ballDiff.x = camBoundary.max.x;
   ballDiff.z = camBoundary.max.y;
@@ -116,12 +154,6 @@ var render = function () {
 
   camera.position.x = (ballCentre.x);
   camera.position.z = (ballCentre.y);
-
-  renderer.render(scene, camera);
-
-  requestAnimationFrame( render );
-
-  stats.end();
-};
+}
 
 render();

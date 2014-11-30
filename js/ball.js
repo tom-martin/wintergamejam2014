@@ -39,8 +39,6 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     self.shrinking = false;
     self.previousShrinking = false;
 
-    scene.add(self.mesh);
-
     var white = new THREE.Color(0xffffff);
     var red = new THREE.Color(0xff0000);
 
@@ -49,6 +47,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         self.sphereMaterial.color = red;
         self.mesh.material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
         Util.playRandomSound(deathSounds, 1.0);
+        Game.inProgress = false;
     };
 
     self.update = function(now, tick, otherBalls) {
