@@ -11,6 +11,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var shrinkRate = 1.0;
 
     var deathSounds = [new Audio("../audio/death1.ogg"), new Audio("../audio/death2.ogg")];
+    var collideSounds = [new Audio("../audio/collide1.ogg"), new Audio("../audio/collide2.ogg"), new Audio("../audio/collide3.ogg")];
 
     var KillFactor = 2.0;
     var BounceFactor = 50.0;
@@ -167,6 +168,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
                             otherBall.shrink(tick * SnowSwapFactor);
                         }
                         moveAwayFromOtherBall(otherBall, tick);
+                        Util.playRandomSound(collideSounds, 1.0);
                     }
                 }
             }
