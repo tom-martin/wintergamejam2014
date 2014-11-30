@@ -6,5 +6,11 @@ var Util =  {
         }
 
         return juice*factor;
+    },
+
+    playRandomSound: function(audios, volume) {
+        var a = audios[Math.floor(Math.random() * audios.length)];
+        a.volume = volume;
+        a.play();
     }
-}
+};

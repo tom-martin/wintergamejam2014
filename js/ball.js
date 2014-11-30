@@ -10,6 +10,8 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var growRate = 0.5;
     var shrinkRate = 1.0;
 
+    var deathSounds = [new Audio("../audio/death1.ogg"), new Audio("../audio/death2.ogg")];
+
     var KillFactor = 2.0;
 
     var MaxScale = 30;
@@ -43,6 +45,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         self.isAlive = false;
         self.sphereMaterial.color = red;
         self.mesh.material = new THREE.MeshLambertMaterial( {color: 0xff0000} );
+        Util.playRandomSound(deathSounds, 1.0);
     };
 
     self.update = function(now, tick, otherBalls) {
