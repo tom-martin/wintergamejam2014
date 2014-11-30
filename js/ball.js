@@ -211,13 +211,22 @@ function Ball(startPosition, boundaryRectangle, input) {
         var directionVector = new THREE.Vector3(0,0,0)
             .subVectors(self.mesh.position, otherBall.mesh.position)
             .normalize()
-            .multiplyScalar(BounceFactor * tick);
 
-        self.mesh.position.add(directionVector)
-        self.yRotation = Math.atan2(-directionVector.x, directionVector.z) + (0.5 * Math.PI);
+        directionVector.applyAxisAngle(self.yAxis, -Math.PI/2);
 
-        otherBall.mesh.position.sub(directionVector);
-        otherBall.yRotation = -self.yRotation;
+        var newDirection = self.direction.clone();
+        newDirection.reflect(directionVector);
+        self.yRotation -= self.direction.angleTo(newDirection);
+
+        directionVector = new THREE.Vector3(0,0,0)
+            .subVectors(otherBall.mesh.position, self.mesh.position)
+            .normalize();
+
+        directionVector.applyAxisAngle(self.yAxis, -Math.PI/2);
+
+        var newDirection = otherBall.direction.clone();
+        newDirection.reflect(directionVector);
+        otherBall.yRotation -= otherBall.direction.angleTo(newDirection);
     }
 
     function collidesWithBall(otherBall) {
