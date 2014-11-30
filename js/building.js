@@ -59,7 +59,7 @@ function Building(scene, x, z) {
 	roof.position.x = xPlusWidth;
 	roof.position.z = zPlusWidth;
 
-	roof.position.y = totalHeight+0.1;
+	roof.position.y = totalHeight+0.05;
 	roof.rotation.set(-Math.PI/2, 0, 0);
 	scene.add(roof);
 }

@@ -7,8 +7,8 @@ function Ball(startPosition, boundaryRectangle, input) {
     var Radius = 0.5;
     var TurnSpeed = 15.0;
     var RotationSpeed = 75.0;
-    var growRate = 0.5;
-    var shrinkRate = 1.0;
+    var growRate = 0.6;
+    var shrinkRate = 0.9;
 
     self.isWinner = false;
     self.isLoser = false;
@@ -18,7 +18,7 @@ function Ball(startPosition, boundaryRectangle, input) {
 
     var KillFactor = 2.0;
     var BounceFactor = 150.0;
-    var SnowSwapFactor = 25.0;
+    var SnowSwapFactor = 150.0;
 
     var MaxScale = 30;
     var MinScale = 1;
@@ -215,6 +215,8 @@ function Ball(startPosition, boundaryRectangle, input) {
 
         self.mesh.position.add(directionVector)
         self.yRotation = Math.atan2(-directionVector.x, directionVector.z) + (0.5 * Math.PI);
+
+        otherBall.mesh.position.sub(directionVector);
         otherBall.yRotation = -self.yRotation;
     }
 
