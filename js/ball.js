@@ -99,7 +99,7 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
         arrow.position.y = self.mesh.position.y+2;
 
         var arrowScale = Math.min(5, self.scale/2);
-        arrow.position.z = self.mesh.position.z+(self.scale/2 + arrowScale);
+        arrow.position.z = self.mesh.position.z+(self.scale/2 + arrowScale)+1;
         arrow.scale.set(arrowScale, arrowScale, arrowScale);
     };
 
