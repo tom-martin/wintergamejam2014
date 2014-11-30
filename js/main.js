@@ -90,6 +90,11 @@ function startMusicLoop() {
   music.play();
 }
 
+$("#start-button").click(function() {
+    startNewGame();
+    $("#game-start").modal("hide");
+});
+
 document.addEventListener("keydown", function(e) {
   if ((!Game.inProgress) && e.keyCode == 32) {
     startNewGame();
