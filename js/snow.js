@@ -163,7 +163,7 @@ function Snow(scene) {
             }
 
         }
-    }
+    };
 
     function getBallWidth(ball) {
         var ballScale = ball.scale;

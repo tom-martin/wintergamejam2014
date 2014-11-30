@@ -93,8 +93,6 @@ var render = function () {
   camera.position.x = (ballCentre.x);
   camera.position.z = (ballCentre.y);
 
-  snow.update(balls);
-
   renderer.render(scene, camera);
 
   requestAnimationFrame( render );
