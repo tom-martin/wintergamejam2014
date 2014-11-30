@@ -254,7 +254,7 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
 
         self.mesh.rotation.set(0, 0, 0);
         self.mesh.rotateOnAxis( self.yAxis, self.yRotation );
-        self.mesh.rotateOnAxis( self.xAxis, self.xRotation );
+        self.mesh.rotateOnAxis( self.xAxis, self.xRotation % Math.PI);
     }
 
     function applyScale() {

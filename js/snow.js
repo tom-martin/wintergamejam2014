@@ -117,7 +117,7 @@ function Snow(scene) {
     };
 
     self.update = function(tick, balls) {
-        for(var i = 0.05; i < tick*200; i+=0.05) {
+        for(var i = 0.05; i < tick*100; i+=0.05) {
             var randomVert = Math.floor(Math.random()*geom.vertices.length);
             self.showFacesForVert(randomVert);
         }

@@ -111,11 +111,14 @@ document.addEventListener("keydown", function(e) {
 });
 
 function startNewGame() {
+  scene.remove(snow.mesh);
 
   for (ballIndex in balls) {
     scene.remove(balls[ballIndex].mesh);
     scene.remove(balls[ballIndex].arrow);
   }
+
+  snow = new Snow(scene);
 
   Game.inProgress = true;
   balls = [new Ball(new THREE.Vector3(10, 0, 0), boundary, new Input(38, 40, 37, 39), arrow1Texture),
