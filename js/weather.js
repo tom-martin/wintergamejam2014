@@ -44,7 +44,7 @@ function Weather() {
         snowflake.position.z = randomPoint();
     }
 
-    self.update = function() {
+    self.update = function(tick) {
         for (var i in snowflakes) {
             /* TODO: apply rotation, velocity, drag */
             var snowflake = snowflakes[i];
@@ -53,7 +53,7 @@ function Weather() {
             if (snowflake.position.y < 0) {
                 recycle(snowflake);
             } else {
-                snowflake.position.y += velocity
+                snowflake.position.y += velocity * tick;
             }
         }
     }

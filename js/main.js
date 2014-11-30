@@ -113,7 +113,7 @@ var render = function () {
   camBoundary.min.set(10000, 10000);
   camBoundary.max.set(-10000, -10000);
 
-  weather.update();
+  weather.update(tick);
 
   if (Game.inProgress) {
     for(var ballI in balls) {
