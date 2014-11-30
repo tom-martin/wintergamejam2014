@@ -10,7 +10,10 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     var growRate = 0.5;
     var shrinkRate = 1.0;
 
+    var KillFactor = 2.0;
+
     var MaxScale = 30;
+    var MinScale = 1;
 
     self.previousPosition = startPosition.clone();
 
@@ -142,7 +145,9 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
         otherBalls.forEach(function(otherBall) {
             if (otherBall != self && otherBall.isAlive) {
                 if (collidesWithBall(otherBall)) {
-                    if (otherBall.scale > self.scale) {
+                    if (self.scale > (otherBall.scale * KillFactor)) {
+                        otherBall.kill();
+                    } else if (otherBall.scale > self.scale) {
                         self.shrink(tick * 5);
                     } else if (otherBall.scale < self.scale) {
                         self.grow(tick * 5);
@@ -181,7 +186,7 @@ function Ball(scene, startPosition, boundaryRectangle, input) {
     self.shrink = function(tick) {
         self.shrinking = true;
 
-        self.scale -= (shrinkRate * tick);
+        self.scale = Math.max(MinScale, self.scale - (shrinkRate * tick));
     };
 
     function clearFlags() {

@@ -72,10 +72,6 @@ var render = function () {
 
   	camBoundary.max.x = Math.max(ball.mesh.position.x, camBoundary.max.x);
   	camBoundary.max.y = Math.max(ball.mesh.position.z, camBoundary.max.y);
-
-    if (ball.scale < 0.1) {
-      ball.kill();
-    }
   }
 
 
