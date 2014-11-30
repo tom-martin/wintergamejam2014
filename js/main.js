@@ -56,7 +56,7 @@ var render = function () {
   stats.begin();
 
   var now = Date.now();
-  var tick = Math.min(0.1, (now - lastFrameTime) / 1000);
+  var tick = Math.min(0.2, (now - lastFrameTime) / 1000);
   lastFrameTime = now;
 
   camBoundary.min.set(10000, 10000);

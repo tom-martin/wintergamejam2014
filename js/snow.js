@@ -51,6 +51,32 @@ function Snow(scene) {
     } ) );
     scene.add(self.mesh);
 
+    self.showFace = function(faceIndex) {
+        if(faceIndex < geom.faceVertexUvs[0].length) {
+            var faceUvs = geom.faceVertexUvs[0][faceIndex];
+            if(faceIndex % 2 == 0) {
+                faceUvs[0].x = 0.0;
+                faceUvs[0].y = 0.5;
+
+                faceUvs[1].x = 0.0;
+                faceUvs[1].y = 1.0;
+
+                faceUvs[2].x = 0.5;
+                faceUvs[2].y = 1.0;
+            } else {
+                faceUvs[0].x = 0.5;
+                faceUvs[0].y = 0.5;
+
+                faceUvs[1].x = 0.0;
+                faceUvs[1].y = 1.0;
+
+                faceUvs[2].x = 0.5;
+                faceUvs[2].y = 1.0;
+            }
+            geom.uvsNeedUpdate = true;
+        }
+    };
+
     self.hideFace = function(faceIndex) {
         if(faceIndex < geom.faceVertexUvs[0].length) {
             var faceUvs = geom.faceVertexUvs[0][faceIndex];
@@ -84,7 +110,18 @@ function Snow(scene) {
         self.hideFace(faceReference[vertIndex]+1);
     };
 
+    self.showFacesForVert = function(vertIndex) {
+        clearedSnow[vertIndex] = false;
+        self.showFace(faceReference[vertIndex]);
+        self.showFace(faceReference[vertIndex]+1);
+    };
+
     self.update = function(tick, balls) {
+        for(var i = 0.05; i < tick*100; i+=0.05) {
+            var randomVert = Math.floor(Math.random()*geom.vertices.length);
+            self.showFacesForVert(randomVert);
+        }
+
         var diff = new THREE.Vector3(0, 0, 0);
         for (var ballIndex in balls) {
             var ball = balls[ballIndex]
