@@ -46,7 +46,7 @@ plane.position.y = -0.5;
 plane.rotation.set(-Math.PI/2, 0, 0);
 scene.add( plane );
 
-var weather = new Weather();
+var weather = new Weather(boundary);
 weather.startSnowing(scene);
 
 var x = boundary.min.x-15;

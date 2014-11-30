@@ -1,10 +1,10 @@
-function Weather() {
+function Weather(boundary) {
     var self = this;
 
     var TO_RADIANS = Math.PI / 180;
 
     var gravity = new THREE.Vector3(0,0,0);
-    var velocity = -8
+    var velocity = -4;
     var drag = 1;
 
     var mesh;
@@ -27,27 +27,35 @@ function Weather() {
 
     var snowflakes = [];
     self.startSnowing = function(scene) {
-        for (var i = 0; i < 10000; i++) {
-            flake = snowflake(randomPoint(), randomPoint(), randomPoint())
+        for (var i = 0; i < 1000; i++) {
+            flake = snowflake(randomPointX(), randomPointY(), randomPointZ())
             scene.add(flake);
             snowflakes.push(flake);
         }
     }
 
-    function randomPoint() {
-        return Math.random() * 400 - 300;
+    function randomPointX() {
+        return boundary.min.x + (Math.random() * (boundary.max.x - boundary.min.x));
+    }
+
+    function randomPointY() {
+        return rand(10, 100);
+    }
+
+    function randomPointZ() {
+        return boundary.min.y + (Math.random() * (boundary.max.y - boundary.min.y));
     }
 
     function recycle(snowflake) {
-        snowflake.position.x = randomPoint();
-        snowflake.position.y = randomPoint();
-        snowflake.position.z = randomPoint();
+        snowflake.position.x = randomPointX();
+        snowflake.position.y = randomPointY();
+        snowflake.position.z = randomPointZ();
     }
 
     self.update = function(tick) {
-        for (var i in snowflakes) {
+        for(var i=0; i < 1000; i++) {
             /* TODO: apply rotation, velocity, drag */
-            var snowflake = snowflakes[i];
+            var snowflake = snowflakes[i%snowflakes.length];
 
             snowflake.rotation.x += 0.01;
             if (snowflake.position.y < 0) {
