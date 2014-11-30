@@ -83,9 +83,12 @@ var ballCentre = new THREE.Vector2();
 
 var camBoundary = new THREE.Box2(new THREE.Vector2(-50, -50), new THREE.Vector2(50, 50));
 
-var music = new Audio("../audio/music.ogg");
-music.volume = 0.8;
-music.play();
+function startMusicLoop() {
+  var music = new Audio("../audio/music.ogg");
+  music.volume = 0.8;
+  music.loop = true;
+  music.play();
+}
 
 document.addEventListener("keydown", function(e) {
   if ((!Game.inProgress) && e.keyCode == 32) {
@@ -143,8 +146,6 @@ var render = function () {
     $("#game-start").modal('show');
   }
 
-
-
   renderer.render(scene, camera);
 
   requestAnimationFrame( render );
@@ -180,5 +181,7 @@ function positionCamera() {
   camera.position.x = (ballCentre.x);
   camera.position.z = (ballCentre.y);
 }
+
+startMusicLoop();
 
 render();
