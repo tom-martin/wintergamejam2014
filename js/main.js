@@ -92,7 +92,7 @@ var ballCentre = new THREE.Vector2();
 var camBoundary = new THREE.Box2(new THREE.Vector2(-50, -50), new THREE.Vector2(50, 50));
 
 function startMusicLoop() {
-  var music = new Audio("../audio/music.ogg");
+  var music = new Audio("audio/music.ogg");
   music.volume = 0.8;
   music.loop = true;
   music.play();

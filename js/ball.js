@@ -13,8 +13,8 @@ function Ball(startPosition, boundaryRectangle, input, arrowTexture) {
     self.isWinner = false;
     self.isLoser = false;
 
-    var deathSounds = [new Audio("../audio/death1.ogg"), new Audio("../audio/death2.ogg")];
-    var collideSounds = [new Audio("../audio/collide1.ogg"), new Audio("../audio/collide2.ogg"), new Audio("../audio/collide3.ogg")];
+    var deathSounds = [new Audio("audio/death1.ogg"), new Audio("audio/death2.ogg")];
+    var collideSounds = [new Audio("audio/collide1.ogg"), new Audio("audio/collide2.ogg"), new Audio("audio/collide3.ogg")];
 
     var KillFactor = 2.0;
     var BounceFactor = 150.0;
